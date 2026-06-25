@@ -359,16 +359,11 @@ function executeMove(src, tgt) {
     renderBoard();
     updateHUD();
     
-    // Check game over for Par Challenge
-    if (gameMode === 'challenge-par' && movesMade >= maxMoves) {
-        // Delay slightly for render transition
+    const won = checkWin(false);
+    if (!won && gameMode === 'challenge-par' && movesMade >= maxMoves) {
         setTimeout(() => {
-            if (!checkWin(true)) {
-                gameoverOverlay.classList.remove('hidden');
-            }
+            gameoverOverlay.classList.remove('hidden');
         }, 200);
-    } else {
-        checkWin(false);
     }
 }
 
@@ -593,15 +588,6 @@ function checkWin(checkOnly = false) {
             if (gameMode === 'challenge-par') {
                 msg.textContent = `You beat the Par Challenge in ${movesMade} moves (Par was ${maxMoves})!`;
                 retrySameBtn.classList.add('hidden');
-            } else if (gameMode === 'classic') {
-                const optimal = getClassicOptimalMoves(colorsCount);
-                if (movesMade > optimal) {
-                    msg.innerHTML = `You solved it in <strong>${movesMade}</strong> moves!<br>But it could have been done with fewer steps (Optimal is <strong>${optimal}</strong> moves).<br>Want to try again?`;
-                    retrySameBtn.classList.remove('hidden');
-                } else {
-                    msg.innerHTML = `Incredible! You solved it in <strong>${movesMade}</strong> moves, which is an optimal solution!`;
-                    retrySameBtn.classList.add('hidden');
-                }
             } else {
                 msg.textContent = "Amazing! You sorted all colors perfectly.";
                 retrySameBtn.classList.add('hidden');
