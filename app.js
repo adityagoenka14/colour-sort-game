@@ -37,6 +37,22 @@ const paywallOverlay = document.getElementById('paywall-overlay');
 const gameoverOverlay = document.getElementById('gameover-overlay');
 const winOverlay = document.getElementById('win-overlay');
 
+function showOverlay(el) {
+    if (!el) return;
+    el.classList.remove('hidden');
+    el.style.setProperty('display', 'flex', 'important');
+    el.style.setProperty('opacity', '1', 'important');
+    el.style.setProperty('pointer-events', 'auto', 'important');
+}
+
+function hideOverlay(el) {
+    if (!el) return;
+    el.classList.add('hidden');
+    el.style.setProperty('display', 'none', 'important');
+    el.style.setProperty('opacity', '0', 'important');
+    el.style.setProperty('pointer-events', 'none', 'important');
+}
+
 // Color buttons selection
 const colorBtns = document.querySelectorAll('.color-btn');
 const challengeBtns = document.querySelectorAll('.challenge-select-btn');
@@ -54,9 +70,9 @@ function initGame() {
     isLockedTubeUnlocked = false;
     
     hideHint();
-    winOverlay.classList.add('hidden');
-    gameoverOverlay.classList.add('hidden');
-    menuOverlay.classList.add('hidden');
+    hideOverlay(winOverlay);
+    hideOverlay(gameoverOverlay);
+    hideOverlay(menuOverlay);
     
     if (gameMode === 'classic') {
         generateClassicMode();
@@ -364,7 +380,7 @@ function executeMove(src, tgt) {
     const won = checkWin(false);
     if (!won && gameMode === 'challenge-par' && movesMade >= maxMoves) {
         setTimeout(() => {
-            gameoverOverlay.classList.remove('hidden');
+            showOverlay(gameoverOverlay);
         }, 200);
     }
 }
@@ -596,7 +612,7 @@ function checkWin(checkOnly = false) {
                 msg.textContent = "Amazing! You sorted all colors perfectly.";
                 retrySameBtn.classList.add('hidden');
             }
-            winOverlay.classList.remove('hidden');
+            showOverlay(winOverlay);
         }, 200);
     }
     
@@ -613,16 +629,16 @@ function getClassicOptimalMoves(colors) {
    ========================================== */
 
 function showMainMenu() {
-    menuOverlay.classList.remove('hidden');
-    winOverlay.classList.add('hidden');
-    gameoverOverlay.classList.add('hidden');
-    if (resetOverlay) resetOverlay.classList.add('hidden');
+    showOverlay(menuOverlay);
+    hideOverlay(winOverlay);
+    hideOverlay(gameoverOverlay);
+    hideOverlay(resetOverlay);
 }
 
 function handleCheckout() {
     // Simulate transaction
     isPremiumUnlocked = true;
-    paywallOverlay.classList.add('hidden');
+    hideOverlay(paywallOverlay);
     
     // Unlock color buttons in Menu
     const premiumBtns = document.querySelectorAll('.premium-lock');
@@ -643,7 +659,7 @@ colorBtns.forEach(btn => {
     btn.addEventListener('click', (e) => {
         const num = parseInt(btn.dataset.colors);
         if (num >= 6 && !isPremiumUnlocked) {
-            paywallOverlay.classList.remove('hidden');
+            showOverlay(paywallOverlay);
             return;
         }
         
@@ -701,7 +717,7 @@ function handleReset() {
     if (hasResets) {
         resetLevelState();
     } else {
-        resetOverlay.classList.remove('hidden');
+        showOverlay(resetOverlay);
     }
 }
 
@@ -715,8 +731,8 @@ function resetLevelState() {
     isLockedTubeUnlocked = false;
     
     hideHint();
-    winOverlay.classList.add('hidden');
-    gameoverOverlay.classList.add('hidden');
+    hideOverlay(winOverlay);
+    hideOverlay(gameoverOverlay);
     
     updateHUD();
     renderBoard();
@@ -765,7 +781,7 @@ function watchAd() {
             buyBtn.disabled = false;
             closeBtn.disabled = false;
             
-            resetOverlay.classList.add('hidden');
+            hideOverlay(resetOverlay);
             
             alert("🎉 Rewarded ad completed! You got 1 free reset.");
             
@@ -783,18 +799,18 @@ document.getElementById('btn-reset').addEventListener('click', handleReset);
 
 // Paywall actions
 document.getElementById('btn-paywall-close').addEventListener('click', () => {
-    paywallOverlay.classList.add('hidden');
+    hideOverlay(paywallOverlay);
 });
 document.getElementById('btn-paywall-buy').addEventListener('click', handleCheckout);
 
 // Resets Paywall actions
 document.getElementById('btn-reset-close').addEventListener('click', () => {
-    resetOverlay.classList.add('hidden');
+    hideOverlay(resetOverlay);
 });
 document.getElementById('btn-watch-ad').addEventListener('click', watchAd);
 document.getElementById('btn-reset-buy').addEventListener('click', () => {
     localStorage.setItem('unlimitedResets', 'true');
-    resetOverlay.classList.add('hidden');
+    hideOverlay(resetOverlay);
     updateResetButton();
     alert("🎉 Resets Unlocked! You now have unlimited resets.");
 });
