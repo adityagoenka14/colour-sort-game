@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Color Sort Puzzle - Deluxe Edition</title>
+    <link rel="stylesheet" href="styles.css?v=14">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div id="app-container">
+        <!-- Header -->
+        <header>
+            <div class="logo-area">
+                <span class="premium-badge">PRO</span>
+                <h1>Color Sort</h1>
+                <span style="font-size: 10px; color: var(--text-secondary); margin-left: 4px; vertical-align: middle;">v14</span>
+            </div>
+            
+            <!-- Dynamic HUD -->
+            <div id="hud" class="hud-container">
+                <div class="hud-info">
+                    <span id="current-mode-display">Classic Mode (5 Colors)</span>
+                    <span id="move-counter-display" class="hidden">Moves: 0 / 50</span>
+                </div>
+                <div class="hud-buttons">
+                    <button id="btn-menu" class="hud-btn" title="Main Menu">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+                        Menu
+                    </button>
+                    <button id="btn-undo" class="hud-btn" title="Undo">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7v6h6"/><path d="M21 17a9 9 0 0 0-9-9 9 9 0 0 0-6 2.3L3 13"/></svg>
+                        Undo
+                    </button>
+                    <button id="btn-hint" class="hud-btn" title="Hint">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
+                        Hint
+                    </button>
+                    <button id="btn-reset" class="hud-btn" title="Reset Level">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"/></svg>
+                        <span id="reset-btn-text">Reset (3)</span>
+                    </button>
+                </div>
+            </div>
+            
+            <div id="hint-display" class="hint-text hidden"></div>
+        </header>
+
+        <!-- Main Board -->
+        <main id="game-board">
+            <!-- Tubes injected here -->
+        </main>
+        
+        <!-- Bottom Controls -->
+        <footer>
+        </footer>
+
+        <!-- Menu / Mode Selector Modal (Shows on start & when clicking Menu) -->
+        <div id="menu-overlay" class="overlay">
+            <div class="overlay-content menu-content">
+                <h2>Select Game Mode <span style="font-size: 11px; font-weight: normal; color: var(--text-secondary);">v14</span></h2>
+                <p class="menu-subtitle">Choose a mode to begin sorting</p>
+                
+                <div class="menu-sections">
+                    <!-- Classic Mode Config -->
+                    <div class="menu-card">
+                        <h3>Classic Mode</h3>
+                        <p>Sort the colors into matching tubes. Any ball can be placed anywhere.</p>
+                        
+                        <div class="color-select-title">Select Colors (3 - 5):</div>
+                        <div class="color-grid">
+                            <button class="color-btn" data-colors="3">3</button>
+                            <button class="color-btn" data-colors="4">4</button>
+                            <button class="color-btn active" data-colors="5">5</button>
+                        </div>
+                        
+                        <div class="color-select-title premium-title">Premium Levels (6 - 10):</div>
+                        <div class="color-grid premium-grid">
+                            <button class="color-btn premium-lock" data-colors="6">6 👑</button>
+                            <button class="color-btn premium-lock" data-colors="7">7 👑</button>
+                            <button class="color-btn premium-lock" data-colors="8">8 👑</button>
+                            <button class="color-btn premium-lock" data-colors="9">9 👑</button>
+                            <button class="color-btn premium-lock" data-colors="10">10 👑</button>
+                        </div>
+                    </div>
+
+                    <!-- Hard / Challenge Modes -->
+                    <div class="menu-card challenge-card">
+                        <h3>Challenge Modes</h3>
+                        <p>No color constraints, but with rules designed to stretch your brain.</p>
+                        
+                        <div class="challenge-grid">
+                            <button class="challenge-select-btn" data-challenge="par">
+                                <strong>Par Challenge</strong>
+                                <span>Solve in limited moves</span>
+                            </button>
+                            <button class="challenge-select-btn" data-challenge="mystery">
+                                <strong>Mystery Sort</strong>
+                                <span>Lower balls are hidden</span>
+                            </button>
+                            <button class="challenge-select-btn" data-challenge="squeeze">
+                                <strong>Tight Squeeze</strong>
+                                <span>Micro 3-capacity buffer tube</span>
+                            </button>
+                            <button class="challenge-select-btn" data-challenge="locked">
+                                <strong>Locked Tubes</strong>
+                                <span>Solve one tube to unlock the buffer</span>
+                            </button>
+                    </div>
+                </div>
+
+                <!-- Settings -->
+                    <div class="menu-card settings-card">
+                        <h3>Settings</h3>
+                        <div class="settings-row">
+                            <span>Theme Mode:</span>
+                            <button id="btn-theme-toggle" class="theme-btn">
+                                <span id="theme-btn-icon">🌙</span>
+                                <span id="theme-btn-text">Dark Mode</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Paywall Modal -->
+        <div id="paywall-overlay" class="overlay hidden">
+            <div class="overlay-content paywall-content">
+                <span class="crown-icon">👑</span>
+                <h2>Unlock Deluxe Edition</h2>
+                <p>Play with 6 to 10 colors for the ultimate sorting challenge, unlock premium neon themes, and disable all ads!</p>
+                
+                <div class="paywall-features">
+                    <div class="feature-item">✓ Unlimited access to 6+ color boards</div>
+                    <div class="feature-item">✓ Dark & Neon aesthetic customization</div>
+                    <div class="feature-item">✓ Infinite hints and path deviation trackers</div>
+                </div>
+
+                <div class="price-tag">$1.99 one-time purchase</div>
+
+                <button id="btn-paywall-buy" class="buy-btn">Unlock Now (Mock Checkout)</button>
+                <button id="btn-paywall-close" class="close-text-btn">Maybe Later</button>
+            </div>
+        <!-- Resets Paywall / Ad Modal -->
+        <div id="reset-paywall-overlay" class="overlay hidden">
+            <div class="overlay-content paywall-content">
+                <span class="crown-icon">⚡</span>
+                <h2>Resets Exhausted</h2>
+                <p id="ad-status-text">You have used all 3 free resets for today. Unlock unlimited resets forever or watch a short rewarded ad to reset now!</p>
+                
+                <div class="paywall-features" style="margin: 10px auto;">
+                    <div class="feature-item">✓ Instantly restore any level to start</div>
+                    <div class="feature-item">✓ Keep your current level layout</div>
+                    <div class="feature-item">✓ No limits on trial runs</div>
+                </div>
+
+                <div id="ad-loader" class="hidden" style="margin: 15px 0;">
+                    <div class="spinner" style="border: 4px solid #f3f3f3; border-top: 4px solid #1e90ff; border-radius: 50%; width: 30px; height: 30px; animation: spin 1s linear infinite; margin: 0 auto 10px auto;"></div>
+                    <span id="ad-countdown">Watching ad (4s)...</span>
+                </div>
+
+                <button id="btn-watch-ad" class="buy-btn" style="background: linear-gradient(135deg, #4caf50, #2e7d32); color: #fff; margin-bottom: 8px;">Watch Ad for 1 Free Reset</button>
+                <button id="btn-reset-buy" class="buy-btn">Unlock Unlimited Resets ($1.99)</button>
+                <button id="btn-reset-close" class="close-text-btn">Cancel</button>
+            </div>
+        </div>
+
+        <!-- Game Over Modal (Moves out) -->
+        <div id="gameover-overlay" class="overlay hidden">
+            <div class="overlay-content gameover-content">
+                <h2>💥 OUT OF MOVES 💥</h2>
+                <p>You ran out of moves on this Par Challenge!</p>
+                <button id="btn-gameover-retry" class="play-again-btn">Try Again</button>
+                <button id="btn-gameover-menu" class="close-text-btn">Back to Menu</button>
+            </div>
+        </div>
+
+        <!-- Win Overlay -->
+        <div id="win-overlay" class="overlay hidden">
+            <div class="overlay-content win-content">
+                <h2>🎉 YOU WIN! 🎉</h2>
+                <p id="win-message">Amazing! You sorted all colors perfectly.</p>
+                <button id="btn-win-retry-same" class="play-again-btn" style="background: #1e90ff; margin-bottom: 8px;">Try Same Level Again</button>
+                <button id="btn-win-replay" class="play-again-btn">Play Next Level</button>
+                <button id="btn-win-menu" class="close-text-btn">Back to Menu</button>
+            </div>
+        </div>
+    </div>
+    
+    <script src="app.js?v=14"></script>
+</body>
+</html>
