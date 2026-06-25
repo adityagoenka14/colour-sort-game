@@ -71,6 +71,8 @@ function initGame() {
     // Update HUD display
     updateHUD();
     
+    updateDebugDisplay("Game Initialized");
+    
     renderBoard();
 }
 
@@ -580,6 +582,8 @@ function checkWin(checkOnly = false) {
     
     console.log(`[checkWin] gameMode=${gameMode}, colorsCount=${colorsCount}, totalTubes=${tubes.length}, requiredCompleted=${requiredCompleted}, isWon=${isWon}`);
     
+    updateDebugDisplay(`Mode: ${gameMode} | Colors: ${colorsCount} | Tubes: ${tubes.length} | Target: ${requiredCompleted} | Won: ${isWon}`);
+    
     if (isWon && !checkOnly) {
         setTimeout(() => {
             const msg = document.getElementById('win-message');
@@ -821,6 +825,18 @@ themeToggleBtn.addEventListener('click', () => {
         themeText.textContent = 'Dark Mode';
     }
 });
+
+function updateDebugDisplay(message) {
+    const debugEl = document.getElementById('debug-display');
+    if (debugEl) {
+        debugEl.textContent = message;
+    }
+}
+
+window.onerror = function(message, source, lineno, colno, error) {
+    updateDebugDisplay(`Error: ${message} at line ${lineno}`);
+    return false;
+};
 
 // Start game
 showMainMenu();
