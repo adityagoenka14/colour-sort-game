@@ -3,3 +3,4 @@ scratch/
 .agents/
 
 .env
+node_modules/

@@ -11,10 +11,11 @@ ASSETS_DIR="$WORKSPACE_DIR/android-app/app/src/main/assets"
 echo "Creating assets directory if it doesn't exist..."
 mkdir -p "$ASSETS_DIR"
 
-echo "Copying index.html, app.js, and styles.css..."
+echo "Copying index.html, app.js, styles.css, and tailwind.css..."
 cp "$WORKSPACE_DIR/index.html" "$ASSETS_DIR/index.html"
 cp "$WORKSPACE_DIR/app.js" "$ASSETS_DIR/app.js"
 cp "$WORKSPACE_DIR/styles.css" "$ASSETS_DIR/styles.css"
+cp "$WORKSPACE_DIR/tailwind.css" "$ASSETS_DIR/tailwind.css"
 
 # Clean up version queries inside index.html for local file loading to prevent any resolution issues
 sed -i '' 's/\.css?v=[0-9]*/.css/g' "$ASSETS_DIR/index.html"
