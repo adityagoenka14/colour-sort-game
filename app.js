@@ -39,6 +39,7 @@ const paywallOverlay = document.getElementById('paywall-overlay');
 const gameoverOverlay = document.getElementById('gameover-overlay');
 const winOverlay = document.getElementById('win-overlay');
 const settingsOverlay = document.getElementById('settings-overlay');
+const confirmHomeOverlay = document.getElementById('confirm-home-overlay');
 const splashScreen = document.getElementById('splash-screen');
 const homeScreen = document.getElementById('home-screen');
 const gameView = document.getElementById('game-view');
@@ -865,6 +866,19 @@ function showMainMenu() {
     hideOverlay(gameoverOverlay);
     hideOverlay(resetOverlay);
     hideOverlay(settingsOverlay);
+    hideOverlay(confirmHomeOverlay);
+}
+
+function confirmGoHome() {
+    const isGameActive = !gameView.classList.contains('hidden');
+    const hasStarted = movesMade > 0;
+    const isNotEnded = winOverlay.classList.contains('hidden') && gameoverOverlay.classList.contains('hidden');
+    
+    if (isGameActive && hasStarted && isNotEnded) {
+        showOverlay(confirmHomeOverlay);
+    } else {
+        showMainMenu();
+    }
 }
 
 function handleCheckout() {
@@ -1029,17 +1043,29 @@ function watchAd() {
 }
 
 // HUD & Utility actions
-document.getElementById('btn-menu').addEventListener('click', showMainMenu);
+document.getElementById('btn-menu').addEventListener('click', confirmGoHome);
 document.getElementById('btn-undo').addEventListener('click', undoMove);
 document.getElementById('btn-hint').addEventListener('click', showHint);
 document.getElementById('btn-reset').addEventListener('click', handleReset);
 
 // Navigation controls mapping (mobile footer buttons)
-const btnHomeNav = document.getElementById('btn-home-nav');
-if (btnHomeNav) btnHomeNav.addEventListener('click', showMainMenu);
-
 const btnUndoNav = document.getElementById('btn-undo-nav');
 if (btnUndoNav) btnUndoNav.addEventListener('click', undoMove);
+
+// Confirm Home Dialog bindings
+const btnConfirmHomeYes = document.getElementById('btn-confirm-home-yes');
+if (btnConfirmHomeYes) {
+    btnConfirmHomeYes.addEventListener('click', () => {
+        hideOverlay(confirmHomeOverlay);
+        showMainMenu();
+    });
+}
+const btnConfirmHomeNo = document.getElementById('btn-confirm-home-no');
+if (btnConfirmHomeNo) {
+    btnConfirmHomeNo.addEventListener('click', () => {
+        hideOverlay(confirmHomeOverlay);
+    });
+}
 
 const btnMenuClose = document.getElementById('btn-menu-close');
 if (btnMenuClose) btnMenuClose.addEventListener('click', () => hideOverlay(menuOverlay));
@@ -1175,6 +1201,11 @@ window.onerror = function(message, source, lineno, colno, error) {
 
 // Android hardware back key simulation
 window.onAndroidBack = function() {
+    // If confirm overlay is open, dismiss it
+    if (!confirmHomeOverlay.classList.contains('hidden')) {
+        hideOverlay(confirmHomeOverlay);
+        return true;
+    }
     // If settings overlay is open, close it
     if (!settingsOverlay.classList.contains('hidden')) {
         hideOverlay(settingsOverlay);
@@ -1198,7 +1229,7 @@ window.onAndroidBack = function() {
     // If gameplay view is active, exit to home screen
     const gameActive = !gameView.classList.contains('hidden');
     if (gameActive) {
-        showMainMenu();
+        confirmGoHome();
         return true;
     }
     // Otherwise, let Android exit the application

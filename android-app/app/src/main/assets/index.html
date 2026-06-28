@@ -41,6 +41,26 @@
             filter: brightness(0.95);
         }
 
+        /* Google mechanical 3D button */
+        .btn-3d {
+            background: linear-gradient(180deg, var(--color-surface-container-high) 0%, var(--color-surface-container) 100%);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-bottom: 4px solid rgba(0, 0, 0, 0.35);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.15);
+            transition: all 0.08s ease;
+        }
+        body.light-theme .btn-3d {
+            background: linear-gradient(180deg, var(--color-surface-container) 0%, var(--color-surface-container-low) 100%);
+            border: 1px solid rgba(0, 0, 0, 0.08);
+            border-bottom: 4px solid rgba(0, 0, 0, 0.2);
+            box-shadow: 0 3px 5px rgba(0, 0, 0, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.5);
+        }
+        .btn-3d:active {
+            transform: translateY(3px) !important;
+            border-bottom-width: 1px !important;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+        }
+
         .pulse-glow {
             animation: pulse-glow 2.5s cubic-bezier(0.4, 0, 0.6, 1) infinite;
         }
@@ -325,21 +345,21 @@
                 <p class="text-label-sm text-secondary tracking-[0.25em] uppercase font-semibold mt-1">Deluxe Edition</p>
             </div>
             
-            <div class="w-full max-w-xs flex flex-col gap-element-gap relative z-10">
-                <!-- Primary Action -->
-                <button id="btn-home-play" class="w-full h-[60px] rounded-xl bg-gradient-to-r from-primary to-inverse-primary text-on-primary-fixed font-headline-md-mobile text-headline-md-mobile flex items-center justify-center shadow-[0_0_30px_rgba(255,191,215,0.4)] border border-primary/40 transition-all duration-300 active:scale-95 hover:brightness-110">
+            <div class="w-full max-w-xs flex flex-col gap-3 relative z-10 px-4">
+                <!-- Primary Action - M3 Filled Button -->
+                <button id="btn-home-play" class="w-full h-[54px] rounded-full bg-primary text-on-primary font-bold tracking-wider flex items-center justify-center shadow-md hover:brightness-105 active:scale-95 transition-all">
                     PLAY CLASSIC
                 </button>
-                <!-- Secondary Actions -->
-                <button id="btn-home-challenges" class="w-full h-[56px] rounded-xl glass-panel text-on-surface font-headline-md-mobile text-headline-md-mobile flex items-center justify-center transition-all duration-300 active:scale-95 hover:bg-surface-container-high border_glass">
+                <!-- Secondary Actions - M3 Tonal and Outline Buttons -->
+                <button id="btn-home-challenges" class="w-full h-[50px] rounded-full bg-secondary-container text-on-secondary-container font-semibold tracking-wider flex items-center justify-center shadow-sm hover:brightness-105 active:scale-95 transition-all">
                     CHALLENGE MODES
                 </button>
-                <button id="btn-home-settings" class="w-full h-[56px] rounded-xl glass-panel text-on-surface font-headline-md-mobile text-headline-md-mobile flex items-center justify-center transition-all duration-300 active:scale-95 hover:bg-surface-container-high border_glass">
+                <button id="btn-home-settings" class="w-full h-[50px] rounded-full border border-outline text-on-surface font-semibold tracking-wider flex items-center justify-center hover:bg-white/5 active:scale-95 transition-all">
                     SETTINGS
                 </button>
-                <!-- Promotional Action -->
-                <button id="btn-home-premium" class="w-full h-[56px] rounded-xl glass-panel text-secondary border border-secondary/40 font-headline-md-mobile text-headline-md-mobile flex items-center justify-center transition-all duration-300 active:scale-95 hover:bg-secondary/10 pulse-glow mt-4">
-                    <svg class="w-6 h-6 mr-2 text-[#FFD700]" fill="currentColor" viewBox="0 0 24 24"><path d="M2 4l3 7 7-9 7 9 3-7-1 18H3L2 4z"/></svg>
+                <!-- Promotional Action - M3 Tonal Accent -->
+                <button id="btn-home-premium" class="w-full h-[50px] rounded-full bg-tertiary-container text-on-tertiary-container border border-tertiary/20 font-semibold tracking-wider flex items-center justify-center hover:brightness-105 active:scale-95 transition-all mt-3">
+                    <svg class="w-5 h-5 mr-2 text-[#C48E27]" fill="currentColor" viewBox="0 0 24 24"><path d="M2 4l3 7 7-9 7 9 3-7-1 18H3L2 4z"/></svg>
                     UNLOCK DELUXE
                 </button>
             </div>
@@ -347,14 +367,20 @@
 
         <!-- ==================== 3. GAME VIEW SCREEN ==================== -->
         <div id="game-view" class="absolute inset-0 flex flex-col h-full w-full bg-[#0B0B0E] hidden">
-            <!-- Top App Bar -->
-            <header class="w-full z-50 flex items-center justify-between px-game-column-gap pt-10 pb-4 bg-background/40 backdrop-blur-md border-b border-white/10 shrink-0">
-                <button id="btn-menu" class="text-primary hover:opacity-80 active:scale-95 transition-transform flex items-center justify-center w-touch-target-min h-touch-target-min rounded-full hover:bg-white/5">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
+            <!-- Top App Bar (Clears notch/camera status bar responsive) -->
+            <header class="w-full z-50 flex items-center justify-between px-6 pt-16 pb-4 md:pt-10 bg-background/60 backdrop-blur-md border-b border-outline/10 shrink-0">
+                <!-- Mechanical 3D Google Home Button -->
+                <button id="btn-menu" aria-label="Go Home" class="btn-3d flex items-center justify-center w-12 h-12 rounded-xl">
+                    <svg class="w-7 h-7 filter drop-shadow-[0_1.5px_2px_rgba(0,0,0,0.35)]" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M6 19h12v-7l-6-4.5L6 12v7z" fill="#4285F4"/>
+                        <path d="M10 19h4v-5h-4v5z" fill="#34A853"/>
+                        <path d="M19 12l-7-5.25L5 12V10l7-5.25L19 10v2z" fill="#EA4335"/>
+                        <path d="M16 4.75h2v4.5h-2z" fill="#FBBC05"/>
+                    </svg>
                 </button>
                 <div class="flex flex-col items-center">
                     <h1 class="text-headline-md-mobile font-headline-md-mobile text-primary tracking-widest">COLOUR SORT</h1>
-                    <div class="px-3 py-0.5 rounded-full border border-white/10 bg-white/5 mt-1">
+                    <div class="px-3 py-0.5 rounded-full border border-outline/10 bg-surface-container mt-1">
                         <span id="current-mode-display" class="font-label-sm text-[10px] text-on-surface-variant uppercase tracking-wider">Classic • 5 Colors</span>
                     </div>
                 </div>
@@ -364,9 +390,9 @@
             </header>
 
             <!-- Main Gameplay Canvas -->
-            <main class="flex-1 flex flex-col justify-center items-center px-container-padding relative overflow-hidden py-4">
+            <main class="flex-1 flex flex-col justify-center items-center px-container-padding relative overflow-hidden pt-4 pb-28">
                 <!-- Move Counter HUD Overlay -->
-                <div id="move-counter-display" class="mb-4 font-label-sm text-label-sm text-secondary tracking-widest uppercase border border-secondary/20 px-4 py-1.5 rounded-full bg-secondary/5">
+                <div id="move-counter-display" class="mb-4 font-label-sm text-label-sm text-secondary tracking-widest uppercase border border-outline/10 px-4 py-1.5 rounded-full bg-surface-container shadow-sm">
                     Moves: 0
                 </div>
 
@@ -381,18 +407,17 @@
                 </div>
             </main>
 
-            <!-- Navigation Controls (Mobile footer) -->
-            <nav class="w-full z-50 flex justify-around items-center px-container-padding pb-8 pt-4 bg-surface-container-low/60 backdrop-blur-xl border-t border-white/5 shadow-2xl rounded-t-xl shrink-0">
-                <button id="btn-home-nav" class="flex flex-col items-center justify-center text-on-surface-variant p-3 hover:text-primary active:scale-90 transition-all duration-200">
-                    <svg class="w-7 h-7" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
-                </button>
+            <!-- Floating Responsive Bottom Menu Bar (Home Button removed) -->
+            <nav class="absolute bottom-6 left-1/2 -translate-x-1/2 w-[92%] max-w-md z-50 flex justify-around items-center px-6 py-3 bg-surface-container/85 backdrop-blur-xl border border-outline/10 shadow-2xl rounded-full">
+                <!-- Undo Action -->
                 <button id="btn-undo-nav" class="flex flex-col items-center justify-center text-on-surface-variant p-3 hover:text-primary active:scale-90 transition-all duration-200">
                     <svg class="w-7 h-7" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 10h10a8 8 0 018 8v2M3 10l6 6m-6-6l6-6"/></svg>
                 </button>
                 <!-- Active Hint Bulb button -->
-                <button id="btn-hint" class="flex flex-col items-center justify-center bg-secondary-container text-on-secondary-container rounded-full p-4 shadow-[0_0_20px_rgba(210,187,255,0.4)] hover:brightness-110 active:scale-90 transition-all duration-200">
+                <button id="btn-hint" class="flex flex-col items-center justify-center bg-secondary-container text-on-secondary-container rounded-full p-4 shadow-lg hover:brightness-105 active:scale-90 transition-all duration-200">
                     <svg class="w-7 h-7 animate-pulse" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/></svg>
                 </button>
+                <!-- Reset Action -->
                 <button id="btn-reset" class="flex flex-col items-center justify-center text-on-surface-variant p-3 hover:text-primary active:scale-90 transition-all duration-200">
                     <span id="reset-btn-text" class="hidden">Reset (3)</span>
                     <svg class="w-7 h-7" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 4v5h.582m15.356 2a8 8 0 11-1.616-4.973M12 8v4l3 3"/></svg>
@@ -650,6 +675,21 @@
                     <button id="btn-win-menu" class="w-full py-3.5 rounded-xl border border-outline text-on-surface font-headline-md-mobile text-headline-md-mobile hover:bg-surface-container-high transition-colors flex items-center justify-center gap-2">
                         <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"/></svg>
                         Back to Menu
+                    </button>
+                </div>
+        <!-- ==================== 10. CONFIRM GO HOME OVERLAY ==================== -->
+        <div id="confirm-home-overlay" class="overlay hidden">
+            <div class="glass-panel w-full max-w-sm rounded-2xl p-8 flex flex-col items-center text-center border_glass shadow-2xl relative">
+                <span class="text-5xl mb-4">⚠️</span>
+                <h2 class="font-headline-md text-headline-md text-primary mb-2">Leave Game?</h2>
+                <p class="text-sm text-on-surface-variant mb-6">Your current game progress will be lost. Are you sure you want to go back to the menu?</p>
+                
+                <div class="flex flex-col w-full gap-3">
+                    <button id="btn-confirm-home-yes" class="w-full py-3 bg-error text-on-error font-bold rounded-full hover:brightness-105 active:scale-95 transition-all">
+                        Leave Game
+                    </button>
+                    <button id="btn-confirm-home-no" class="w-full py-3 border border-outline rounded-full text-on-surface font-semibold hover:bg-white/5 active:scale-95 transition-all">
+                        Keep Playing
                     </button>
                 </div>
             </div>
