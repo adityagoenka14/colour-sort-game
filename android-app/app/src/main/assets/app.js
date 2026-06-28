@@ -1187,6 +1187,153 @@ document.getElementById('btn-settings-close').addEventListener('click', () => {
     hideOverlay(settingsOverlay);
 });
 
+const ACCENT_THEMES = {
+    blue: {
+        light: {
+            '--color-primary': '#1A73E8',
+            '--color-on-primary': '#FFFFFF',
+            '--color-primary-container': '#D2E3FC',
+            '--color-on-primary-container': '#174EA6',
+            '--color-secondary': '#185ABC',
+            '--color-on-secondary': '#FFFFFF',
+            '--color-secondary-container': '#E8F0FE',
+            '--color-on-secondary-container': '#1A73E8',
+            '--color-tertiary': '#12B5CB',
+            '--color-on-tertiary': '#FFFFFF',
+            '--color-tertiary-container': '#E0F7FA',
+            '--color-on-tertiary-container': '#006064'
+        },
+        dark: {
+            '--color-primary': '#8AB4F8',
+            '--color-on-primary': '#174EA6',
+            '--color-primary-container': '#174EA6',
+            '--color-on-primary-container': '#D2E3FC',
+            '--color-secondary': '#ADC1F9',
+            '--color-on-secondary': '#185ABC',
+            '--color-secondary-container': '#185ABC',
+            '--color-on-secondary-container': '#E8F0FE',
+            '--color-tertiary': '#80DEEA',
+            '--color-on-tertiary': '#006064',
+            '--color-tertiary-container': '#006064',
+            '--color-on-tertiary-container': '#E0F7FA'
+        }
+    },
+    green: {
+        light: {
+            '--color-primary': '#137333',
+            '--color-on-primary': '#FFFFFF',
+            '--color-primary-container': '#CEEAD6',
+            '--color-on-primary-container': '#0D652D',
+            '--color-secondary': '#1E8E3E',
+            '--color-on-secondary': '#FFFFFF',
+            '--color-secondary-container': '#E6F4EA',
+            '--color-on-secondary-container': '#137333',
+            '--color-tertiary': '#E37400',
+            '--color-on-tertiary': '#FFFFFF',
+            '--color-tertiary-container': '#FFE0B2',
+            '--color-on-tertiary-container': '#B06000'
+        },
+        dark: {
+            '--color-primary': '#81C995',
+            '--color-on-primary': '#0D652D',
+            '--color-primary-container': '#0D652D',
+            '--color-on-primary-container': '#CEEAD6',
+            '--color-secondary': '#A8DAB5',
+            '--color-on-secondary': '#1E8E3E',
+            '--color-secondary-container': '#1E8E3E',
+            '--color-on-secondary-container': '#E6F4EA',
+            '--color-tertiary': '#FDD663',
+            '--color-on-tertiary': '#B06000',
+            '--color-tertiary-container': '#B06000',
+            '--color-on-tertiary-container': '#FFE0B2'
+        }
+    },
+    red: {
+        light: {
+            '--color-primary': '#C5221F',
+            '--color-on-primary': '#FFFFFF',
+            '--color-primary-container': '#FAD2CF',
+            '--color-on-primary-container': '#A51D24',
+            '--color-secondary': '#D93025',
+            '--color-on-secondary': '#FFFFFF',
+            '--color-secondary-container': '#FCE8E6',
+            '--color-on-secondary-container': '#C5221F',
+            '--color-tertiary': '#1A73E8',
+            '--color-on-tertiary': '#FFFFFF',
+            '--color-tertiary-container': '#D2E3FC',
+            '--color-on-tertiary-container': '#174EA6'
+        },
+        dark: {
+            '--color-primary': '#F28B82',
+            '--color-on-primary': '#A51D24',
+            '--color-primary-container': '#A51D24',
+            '--color-on-primary-container': '#FAD2CF',
+            '--color-secondary': '#F6AEA9',
+            '--color-on-secondary': '#D93025',
+            '--color-secondary-container': '#D93025',
+            '--color-on-secondary-container': '#FCE8E6',
+            '--color-tertiary': '#8AB4F8',
+            '--color-on-tertiary': '#174EA6',
+            '--color-tertiary-container': '#174EA6',
+            '--color-on-tertiary-container': '#D2E3FC'
+        }
+    },
+    yellow: {
+        light: {
+            '--color-primary': '#B06000',
+            '--color-on-primary': '#FFFFFF',
+            '--color-primary-container': '#FFE0B2',
+            '--color-on-primary-container': '#E37400',
+            '--color-secondary': '#F29900',
+            '--color-on-secondary': '#FFFFFF',
+            '--color-secondary-container': '#FEF7E0',
+            '--color-on-secondary-container': '#B06000',
+            '--color-tertiary': '#137333',
+            '--color-on-tertiary': '#FFFFFF',
+            '--color-tertiary-container': '#CEEAD6',
+            '--color-on-tertiary-container': '#0D652D'
+        },
+        dark: {
+            '--color-primary': '#FDD663',
+            '--color-on-primary': '#B06000',
+            '--color-primary-container': '#B06000',
+            '--color-on-primary-container': '#FFE0B2',
+            '--color-secondary': '#FDE293',
+            '--color-on-secondary': '#F29900',
+            '--color-secondary-container': '#F29900',
+            '--color-on-secondary-container': '#FEF7E0',
+            '--color-tertiary': '#81C995',
+            '--color-on-tertiary': '#0D652D',
+            '--color-tertiary-container': '#0D652D',
+            '--color-on-tertiary-container': '#CEEAD6'
+        }
+    }
+};
+
+function applyThemeAccent(accent) {
+    const isDark = document.documentElement.classList.contains('dark');
+    const mode = isDark ? 'dark' : 'light';
+    const properties = ACCENT_THEMES[accent][mode];
+    for (const [prop, val] of Object.entries(properties)) {
+        document.documentElement.style.setProperty(prop, val);
+    }
+    localStorage.setItem('themeAccent', accent);
+    updateThemeAccentUI();
+}
+
+function updateThemeAccentUI() {
+    const currentAccent = localStorage.getItem('themeAccent') || 'blue';
+    const btns = document.querySelectorAll('.accent-btn');
+    btns.forEach(btn => {
+        const accent = btn.dataset.accent;
+        if (accent === currentAccent) {
+            btn.className = 'accent-btn py-2 border rounded-full text-xs font-bold active:scale-95 transition-all text-center select-none bg-primary text-on-primary border-primary';
+        } else {
+            btn.className = 'accent-btn py-2 border border-outline/25 rounded-full text-xs font-semibold active:scale-95 transition-all text-center select-none text-on-surface hover:bg-white/5';
+        }
+    });
+}
+
 function toggleTheme() {
     const checkbox = document.getElementById('btn-settings-theme');
     const isLight = checkbox ? checkbox.checked : document.body.classList.contains('light-theme');
@@ -1200,6 +1347,10 @@ function toggleTheme() {
         localStorage.setItem('theme', 'dark');
     }
     updateThemeUI();
+    
+    // Apply current accent theme
+    const currentAccent = localStorage.getItem('themeAccent') || 'blue';
+    applyThemeAccent(currentAccent);
 }
 
 function updateThemeUI() {
@@ -1251,6 +1402,19 @@ function initSettingsUI() {
         document.documentElement.classList.add('dark');
     }
     updateThemeUI();
+    
+    // Load dynamic accent theme
+    const currentAccent = localStorage.getItem('themeAccent') || 'blue';
+    applyThemeAccent(currentAccent);
+    
+    // Bind accent buttons click listeners
+    const btns = document.querySelectorAll('.accent-btn');
+    btns.forEach(btn => {
+        btn.addEventListener('click', () => {
+            const accent = btn.dataset.accent;
+            applyThemeAccent(accent);
+        });
+    });
     
     // Load sound setting
     updateSoundUI();
