@@ -850,7 +850,11 @@ function checkWin(checkOnly = false) {
                 msg.textContent = `Amazing! You sorted all ${colorsCount} colors perfectly.`;
                 retrySameBtn.classList.remove('hidden');
                 if (replayBtn) {
-                    replayBtn.innerHTML = `<svg class="w-5 h-5 fill-current" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg> Play Next Level of ${colorsCount} Colors`;
+                    if (colorsCount < 10) {
+                        replayBtn.innerHTML = `<svg class="w-5 h-5 fill-current" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg> Play Next Level of ${colorsCount + 1} Colors`;
+                    } else {
+                        replayBtn.innerHTML = `<svg class="w-5 h-5 fill-current" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg> Replay Level 10`;
+                    }
                 }
             } else {
                 let modeName = '';
@@ -1162,7 +1166,24 @@ document.getElementById('btn-reset-buy').addEventListener('click', () => {
 document.getElementById('btn-win-retry-same').addEventListener('click', () => {
     resetLevelState();
 });
-document.getElementById('btn-win-replay').addEventListener('click', () => initGame());
+document.getElementById('btn-win-replay').addEventListener('click', () => {
+    if (gameMode === 'classic') {
+        if (colorsCount < 10) {
+            const nextLevel = colorsCount + 1;
+            if (nextLevel >= 6 && !isPremiumUnlocked) {
+                hideOverlay(winOverlay);
+                showOverlay(paywallOverlay);
+            } else {
+                colorsCount = nextLevel;
+                initGame();
+            }
+        } else {
+            initGame();
+        }
+    } else {
+        initGame();
+    }
+});
 document.getElementById('btn-win-menu').addEventListener('click', showMainMenu);
 
 document.getElementById('btn-gameover-retry').addEventListener('click', () => initGame());
