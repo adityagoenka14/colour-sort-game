@@ -80,10 +80,10 @@
             position: relative;
         }
         body.light-theme .glass-tube {
-            background: linear-gradient(180deg, rgba(0, 0, 0, 0.05) 0%, rgba(0, 0, 0, 0.01) 100%);
-            border: 1.8px solid rgba(0, 0, 0, 0.14);
+            background: linear-gradient(180deg, rgba(0, 0, 0, 0.03) 0%, rgba(0, 0, 0, 0.07) 100%);
+            border: 2px solid rgba(0, 0, 0, 0.25);
             border-top: none;
-            box-shadow: inset 0 0 8px rgba(0, 0, 0, 0.06), inset -3px -3px 8px rgba(0, 0, 0, 0.08), 0 4px 12px rgba(0, 0, 0, 0.08);
+            box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.04), inset -3px -3px 8px rgba(0, 0, 0, 0.08), 0 6px 18px rgba(0, 0, 0, 0.06);
         }
 
         .tube-selected {
@@ -116,8 +116,8 @@
             z-index: 10;
         }
         body.light-theme .tube-rim {
-            background: linear-gradient(180deg, rgba(0, 0, 0, 0.12) 0%, rgba(0, 0, 0, 0.06) 100%);
-            border: 1.5px solid rgba(0, 0, 0, 0.2);
+            background: linear-gradient(180deg, rgba(0, 0, 0, 0.08) 0%, rgba(0, 0, 0, 0.04) 100%);
+            border: 2px solid rgba(0, 0, 0, 0.25);
         }
 
         .light-beam {
@@ -267,6 +267,9 @@
             justify-content: center;
             padding: 24px;
         }
+        body.light-theme .overlay {
+            background-color: rgba(250, 248, 249, 0.85);
+        }
 
         /* Locked tubes indicator */
         .locked-tube-lock {
@@ -290,7 +293,7 @@
     <div id="app-container" class="relative w-full h-full">
 
         <!-- ==================== 1. SPLASH SCREEN ==================== -->
-        <div id="splash-screen" class="fixed inset-0 z-[1000] bg-[#0B0B0E] flex flex-col items-center justify-center transition-opacity duration-500">
+        <div id="splash-screen" class="fixed inset-0 z-[1000] bg-background flex flex-col items-center justify-center transition-opacity duration-500">
             <!-- Ambient Background Glow -->
             <div class="absolute inset-0 flex items-center justify-center pointer-events-none opacity-20">
                 <div class="w-96 h-96 bg-primary rounded-full blur-[100px] animate-pulse-glow"></div>
@@ -366,16 +369,13 @@
         </div>
 
         <!-- ==================== 3. GAME VIEW SCREEN ==================== -->
-        <div id="game-view" class="absolute inset-0 flex flex-col h-full w-full bg-[#0B0B0E] hidden">
+        <div id="game-view" class="absolute inset-0 flex flex-col h-full w-full bg-background hidden">
             <!-- Top App Bar (Clears notch/camera status bar responsive) -->
             <header class="w-full z-50 flex items-center justify-between px-6 pt-16 pb-4 md:pt-10 bg-background/60 backdrop-blur-md border-b border-outline/10 shrink-0">
-                <!-- Mechanical 3D Google Home Button -->
-                <button id="btn-menu" aria-label="Go Home" class="btn-3d flex items-center justify-center w-12 h-12 rounded-xl">
-                    <svg class="w-7 h-7 filter drop-shadow-[0_1.5px_2px_rgba(0,0,0,0.35)]" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M6 19h12v-7l-6-4.5L6 12v7z" fill="#4285F4"/>
-                        <path d="M10 19h4v-5h-4v5z" fill="#34A853"/>
-                        <path d="M19 12l-7-5.25L5 12V10l7-5.25L19 10v2z" fill="#EA4335"/>
-                        <path d="M16 4.75h2v4.5h-2z" fill="#FBBC05"/>
+                <!-- Monochromatic Circular Home Button -->
+                <button id="btn-menu" aria-label="Go Home" class="flex items-center justify-center w-12 h-12 rounded-full border border-outline/25 bg-surface-container/30 hover:bg-white/5 active:scale-95 transition-all text-on-surface">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/>
                     </svg>
                 </button>
                 <div class="flex flex-col items-center">
@@ -693,10 +693,13 @@
                         Play Next Level
                     </button>
                     <button id="btn-win-menu" class="w-full py-3.5 rounded-xl border border-outline text-on-surface font-headline-md-mobile text-headline-md-mobile hover:bg-surface-container-high transition-colors flex items-center justify-center gap-2">
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"/></svg>
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"/></svg>
                         Back to Menu
                     </button>
                 </div>
+            </div>
+        </div>
+
         <!-- ==================== 10. CONFIRM GO HOME OVERLAY ==================== -->
         <div id="confirm-home-overlay" class="overlay hidden">
             <div class="glass-panel w-full max-w-sm rounded-2xl p-8 flex flex-col items-center text-center border_glass shadow-2xl relative">
