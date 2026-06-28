@@ -67,6 +67,9 @@ function showScreen(screenId) {
             if (id === screenId) {
                 el.classList.remove('hidden');
                 el.style.display = (id === 'game-view' || id === 'classic-menu' || id === 'challenges-menu') ? 'block' : 'flex';
+                if (id === 'classic-menu') {
+                    renderClassicLevels();
+                }
             } else {
                 el.classList.add('hidden');
                 el.style.display = 'none';
@@ -205,7 +208,6 @@ class AudioEngine {
 const sounds = new AudioEngine();
 
 // Color buttons selection
-const colorBtns = document.querySelectorAll('.color-btn');
 const challengeBtns = document.querySelectorAll('.challenge-select-btn');
 
 /* ==========================================
@@ -830,16 +832,39 @@ function checkWin(checkOnly = false) {
     
     if (isWon && !checkOnly) {
         sounds.playWin();
+        
+        // Progress classic level unlocks
+        if (gameMode === 'classic') {
+            const maxUnlocked = parseInt(localStorage.getItem('maxClassicUnlocked') || '3');
+            if (colorsCount === maxUnlocked && colorsCount < 10) {
+                localStorage.setItem('maxClassicUnlocked', (colorsCount + 1).toString());
+            }
+        }
+        
         setTimeout(() => {
             const msg = document.getElementById('win-message');
             const retrySameBtn = document.getElementById('btn-win-retry-same');
+            const replayBtn = document.getElementById('btn-win-replay');
             
-            if (gameMode === 'challenge-par') {
-                msg.textContent = `You beat the Par Challenge in ${movesMade} moves (Par was ${maxMoves})!`;
-                retrySameBtn.classList.add('hidden');
+            if (gameMode === 'classic') {
+                msg.textContent = `Amazing! You sorted all ${colorsCount} colors perfectly.`;
+                retrySameBtn.classList.remove('hidden');
+                if (replayBtn) {
+                    replayBtn.innerHTML = `<svg class="w-5 h-5 fill-current" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg> Play Next Level of ${colorsCount} Colors`;
+                }
             } else {
-                msg.textContent = "Amazing! You sorted all colors perfectly.";
+                let modeName = '';
+                switch(gameMode) {
+                    case 'challenge-par': modeName = 'Par Challenge'; break;
+                    case 'challenge-mystery': modeName = 'Mystery Sort'; break;
+                    case 'challenge-squeeze': modeName = 'Tight Squeeze'; break;
+                    case 'challenge-locked': modeName = 'Locked Tubes'; break;
+                }
+                msg.textContent = `You beat the ${modeName} successfully!`;
                 retrySameBtn.classList.add('hidden');
+                if (replayBtn) {
+                    replayBtn.innerHTML = `<svg class="w-5 h-5 fill-current" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg> Play Next Level`;
+                }
             }
             showOverlay(winOverlay);
         }, 200);
@@ -878,48 +903,92 @@ function confirmGoHome() {
     }
 }
 
+function renderClassicLevels() {
+    const container = document.getElementById('classic-levels-container');
+    if (!container) return;
+    container.innerHTML = '';
+    
+    const maxUnlocked = parseInt(localStorage.getItem('maxClassicUnlocked') || '3');
+    
+    for (let level = 3; level <= 10; level++) {
+        const btn = document.createElement('button');
+        
+        let status = 'locked'; // 'cleared', 'playable', 'locked', 'premium-locked'
+        
+        if (level < maxUnlocked) {
+            status = 'cleared';
+        } else if (level === maxUnlocked) {
+            if (level >= 6 && !isPremiumUnlocked) {
+                status = 'premium-locked';
+            } else {
+                status = 'playable';
+            }
+        } else {
+            // level > maxUnlocked
+            if (level >= 6 && !isPremiumUnlocked) {
+                status = 'premium-locked';
+            } else {
+                status = 'locked';
+            }
+        }
+        
+        // Google UI 3D mechanical button style
+        btn.className = 'btn-3d w-full h-[58px] rounded-xl flex items-center justify-between px-5 text-on-surface font-semibold hover:brightness-105 select-none active:scale-98 transition-all duration-100';
+        
+        let statusIcon = '';
+        if (status === 'cleared') {
+            statusIcon = `<svg class="w-5 h-5 text-green-500 shrink-0" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>`;
+        } else if (status === 'playable') {
+            statusIcon = `<svg class="w-5 h-5 text-primary shrink-0" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>`;
+            btn.classList.add('border-primary/20', 'bg-primary/5');
+        } else if (status === 'premium-locked') {
+            statusIcon = `<div class="flex items-center gap-1.5">
+                <svg class="w-4 h-4 text-[#C48E27] shrink-0" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                <svg class="w-4 h-4 text-on-surface-variant/40 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
+            </div>`;
+            btn.classList.add('opacity-70');
+        } else {
+            statusIcon = `<svg class="w-5 h-5 text-on-surface-variant/30 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>`;
+            btn.classList.add('opacity-50');
+        }
+        
+        btn.innerHTML = `
+            <div class="flex items-center gap-3">
+                <span class="w-8 h-8 rounded-full ${status === 'cleared' ? 'bg-green-500/10 text-green-600' : 'bg-primary/10 text-primary'} flex items-center justify-center font-bold text-sm">${level}</span>
+                <span>Level ${level} (${level} Colors)</span>
+            </div>
+            ${statusIcon}
+        `;
+        
+        btn.addEventListener('click', () => {
+            if (status === 'premium-locked') {
+                showOverlay(paywallOverlay);
+            } else if (status === 'locked') {
+                alert(`🔒 Level ${level} is locked! Clear Level ${level - 1} first.`);
+            } else {
+                // Playable or Cleared
+                gameMode = 'classic';
+                colorsCount = level;
+                initGame();
+            }
+        });
+        
+        container.appendChild(btn);
+    }
+}
+
 function handleCheckout() {
-    // Simulate transaction
     isPremiumUnlocked = true;
     hideOverlay(paywallOverlay);
-    
-    // Unlock color buttons in Menu
-    const premiumBtns = document.querySelectorAll('.premium-lock');
-    premiumBtns.forEach(btn => {
-        btn.classList.remove('premium-lock', 'text-on-surface-variant/50', 'border-white/5');
-        btn.classList.add('border-white/10', 'hover:border-primary/50', 'hover:bg-white/5');
-        btn.innerHTML = btn.dataset.colors;
-    });
-    
-    alert("🎉 Thank you! Premium unlocked. You can now select 6-10 colors.");
-}
+    renderClassicLevels();
+    alert("🎉 Thank you! Premium unlocked. You can now play Levels 6 to 10.");
+};
 
 /* ==========================================
    EVENT LISTENERS
    ========================================== */
 
-// Classic Color selections
-colorBtns.forEach(btn => {
-    btn.addEventListener('click', (e) => {
-        const num = parseInt(btn.dataset.colors);
-        if (num >= 6 && !isPremiumUnlocked) {
-            showOverlay(paywallOverlay);
-            return;
-        }
-        
-        // Set active button
-        colorBtns.forEach(b => {
-            b.classList.remove('active', 'border-primary', 'bg-primary/20', 'text-primary');
-            b.classList.add('border-white/10');
-        });
-        btn.classList.add('active', 'border-primary', 'bg-primary/20', 'text-primary');
-        btn.classList.remove('border-white/10');
-        
-        gameMode = 'classic';
-        colorsCount = num;
-        initGame();
-    });
-});
+// Classic levels are now dynamically rendered and bound in renderClassicLevels()
 
 // Challenge selections
 challengeBtns.forEach(btn => {
