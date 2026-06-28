@@ -34,7 +34,6 @@ const hudMoveDisplay = document.getElementById('move-counter-display');
 const hintDisplay = document.getElementById('hint-display');
 
 // Overlays
-const menuOverlay = document.getElementById('menu-overlay');
 const paywallOverlay = document.getElementById('paywall-overlay');
 const gameoverOverlay = document.getElementById('gameover-overlay');
 const winOverlay = document.getElementById('win-overlay');
@@ -61,13 +60,13 @@ function hideOverlay(el) {
 }
 
 function showScreen(screenId) {
-    const screens = ['splash-screen', 'home-screen', 'game-view'];
+    const screens = ['splash-screen', 'home-screen', 'game-view', 'classic-menu', 'challenges-menu'];
     screens.forEach(id => {
         const el = document.getElementById(id);
         if (el) {
             if (id === screenId) {
                 el.classList.remove('hidden');
-                el.style.display = (id === 'game-view') ? 'block' : 'flex';
+                el.style.display = (id === 'game-view' || id === 'classic-menu' || id === 'challenges-menu') ? 'block' : 'flex';
             } else {
                 el.classList.add('hidden');
                 el.style.display = 'none';
@@ -224,7 +223,6 @@ function initGame() {
     hideHint();
     hideOverlay(winOverlay);
     hideOverlay(gameoverOverlay);
-    hideOverlay(menuOverlay);
     showScreen('game-view');
     
     if (gameMode === 'classic') {
@@ -861,7 +859,6 @@ function getClassicOptimalMoves(colors) {
 
 function showMainMenu() {
     showScreen('home-screen');
-    hideOverlay(menuOverlay);
     hideOverlay(winOverlay);
     hideOverlay(gameoverOverlay);
     hideOverlay(resetOverlay);
@@ -1067,8 +1064,12 @@ if (btnConfirmHomeNo) {
     });
 }
 
-const btnMenuClose = document.getElementById('btn-menu-close');
-if (btnMenuClose) btnMenuClose.addEventListener('click', () => hideOverlay(menuOverlay));
+// Classic & Challenges screen Back buttons
+const btnClassicBack = document.getElementById('btn-classic-back');
+if (btnClassicBack) btnClassicBack.addEventListener('click', showMainMenu);
+
+const btnChallengesBack = document.getElementById('btn-challenges-back');
+if (btnChallengesBack) btnChallengesBack.addEventListener('click', showMainMenu);
 
 // Paywall actions
 document.getElementById('btn-paywall-close').addEventListener('click', () => {
@@ -1100,10 +1101,10 @@ document.getElementById('btn-gameover-menu').addEventListener('click', showMainM
 
 // Home Screen Button Listeners
 document.getElementById('btn-home-play').addEventListener('click', () => {
-    showOverlay(menuOverlay);
+    showScreen('classic-menu');
 });
 document.getElementById('btn-home-challenges').addEventListener('click', () => {
-    showOverlay(menuOverlay);
+    showScreen('challenges-menu');
 });
 document.getElementById('btn-home-settings').addEventListener('click', () => {
     showOverlay(settingsOverlay);
@@ -1211,9 +1212,14 @@ window.onAndroidBack = function() {
         hideOverlay(settingsOverlay);
         return true;
     }
-    // If menu overlay is open, close it
-    if (!menuOverlay.classList.contains('hidden')) {
-        hideOverlay(menuOverlay);
+    // If classic menu is active, back to home screen
+    if (!document.getElementById('classic-menu').classList.contains('hidden')) {
+        showMainMenu();
+        return true;
+    }
+    // If challenges menu is active, back to home screen
+    if (!document.getElementById('challenges-menu').classList.contains('hidden')) {
+        showMainMenu();
         return true;
     }
     // If paywall overlay is open, close it

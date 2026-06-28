@@ -487,87 +487,107 @@
             </div>
         </div>
 
-        <!-- ==================== 5. MODE SELECTOR MENU OVERLAY ==================== -->
-        <div id="menu-overlay" class="overlay hidden">
-            <div class="glass-panel w-full max-w-md rounded-2xl p-6 flex flex-col border_glass relative z-50 text-left max-h-[85vh] overflow-y-auto">
-                <header class="flex justify-between items-center mb-6 shrink-0">
+        <!-- ==================== 5. CLASSIC MENU SCREEN ==================== -->
+        <div id="classic-menu" class="absolute inset-0 flex flex-col px-container-padding bg-background z-10 hidden pt-16 pb-8 md:pt-10">
+            <!-- Header with Back Button -->
+            <header class="flex items-center justify-between mb-8">
+                <!-- Mechanical 3D Back Arrow Button -->
+                <button id="btn-classic-back" aria-label="Go Back" class="btn-3d flex items-center justify-center w-12 h-12 rounded-xl">
+                    <svg class="w-6 h-6 text-on-surface" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/>
+                    </svg>
+                </button>
+                <h1 class="font-headline-md-mobile text-headline-md-mobile text-on-background tracking-widest uppercase">Classic Mode</h1>
+                <div class="w-12 h-12"></div> <!-- Spacer for balance -->
+            </header>
+
+            <div class="flex-1 overflow-y-auto space-y-6 pb-20">
+                <!-- Mode Description Card -->
+                <div class="surface_glass border_glass rounded-2xl p-5 shadow-sm text-left">
+                    <h3 class="font-semibold text-primary mb-1">Standard Sorting</h3>
+                    <p class="text-sm text-on-surface-variant">Sort all matching colors into individual glass test tubes. Relaxed constraints, no move limit.</p>
+                </div>
+
+                <!-- Colors Selection Group -->
+                <div class="surface_glass border_glass rounded-2xl p-5 flex flex-col gap-4 text-left shadow-sm">
                     <div>
-                        <h2 class="font-headline-md text-headline-md text-primary tracking-wider">GAME MODES</h2>
-                        <p class="font-label-sm text-[10px] text-on-surface-variant tracking-wider uppercase mt-1">Select board difficulty or challenge</p>
-                    </div>
-                    <button id="btn-menu-close" class="text-primary hover:opacity-80 active:scale-95 transition-transform w-[40px] h-[40px] flex items-center justify-center rounded-full hover:bg-white/5">
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
-                    </button>
-                </header>
-
-                <div class="space-y-6">
-                    <!-- Classic Mode Settings -->
-                    <div class="surface_glass border_glass rounded-xl p-4 flex flex-col gap-4">
-                        <div class="border-b border-white/5 pb-2">
-                            <h3 class="font-headline-md-mobile text-headline-md-mobile text-on-background">Classic Mode</h3>
-                            <p class="text-sm text-on-surface-variant mt-1">Sort colors into match tubes. Relaxed play constraints.</p>
-                        </div>
-                        
-                        <div>
-                            <div class="font-label-sm text-[10px] text-on-surface-variant uppercase tracking-widest mb-2">Standard Colors (3-5):</div>
-                            <div class="grid grid-cols-3 gap-2">
-                                <button class="color-btn py-2 border border-white/10 rounded-lg text-center hover:bg-white/5 hover:border-primary/50 transition-colors active:scale-95" data-colors="3">3</button>
-                                <button class="color-btn py-2 border border-white/10 rounded-lg text-center hover:bg-white/5 hover:border-primary/50 transition-colors active:scale-95" data-colors="4">4</button>
-                                <button class="color-btn active py-2 border border-primary bg-primary/20 rounded-lg text-center hover:bg-white/5 transition-colors active:scale-95 text-primary" data-colors="5">5</button>
-                            </div>
-                        </div>
-
-                        <div>
-                            <div class="font-label-sm text-[10px] text-on-surface-variant uppercase tracking-widest mb-2">Deluxe Colors (6-10):</div>
-                            <div class="grid grid-cols-5 gap-1.5">
-                                <button class="color-btn premium-lock py-2 border border-white/5 rounded-lg text-xs hover:bg-white/5 transition-colors text-on-surface-variant/50" data-colors="6">6 👑</button>
-                                <button class="color-btn premium-lock py-2 border border-white/5 rounded-lg text-xs hover:bg-white/5 transition-colors text-on-surface-variant/50" data-colors="7">7 👑</button>
-                                <button class="color-btn premium-lock py-2 border border-white/5 rounded-lg text-xs hover:bg-white/5 transition-colors text-on-surface-variant/50" data-colors="8">8 👑</button>
-                                <button class="color-btn premium-lock py-2 border border-white/5 rounded-lg text-xs hover:bg-white/5 transition-colors text-on-surface-variant/50" data-colors="9">9 👑</button>
-                                <button class="color-btn premium-lock py-2 border border-white/5 rounded-lg text-xs hover:bg-white/5 transition-colors text-on-surface-variant/50" data-colors="10">10 👑</button>
-                            </div>
+                        <div class="font-label-sm text-[10px] text-on-surface-variant uppercase tracking-widest mb-3">Standard Difficulty (3-5 colors):</div>
+                        <div class="grid grid-cols-3 gap-3">
+                            <button class="color-btn py-3 border border-outline/25 rounded-full text-center font-bold hover:bg-white/5 active:scale-95 transition-all text-on-surface" data-colors="3">3</button>
+                            <button class="color-btn py-3 border border-outline/25 rounded-full text-center font-bold hover:bg-white/5 active:scale-95 transition-all text-on-surface" data-colors="4">4</button>
+                            <button class="color-btn active py-3 border-2 border-primary bg-primary-container text-on-primary-container rounded-full text-center font-bold active:scale-95 transition-all" data-colors="5">5</button>
                         </div>
                     </div>
 
-                    <!-- Challenge Modes -->
-                    <div class="surface_glass border_glass rounded-xl p-4 flex flex-col gap-3">
-                        <div class="border-b border-white/5 pb-2">
-                            <h3 class="font-headline-md-mobile text-headline-md-mobile text-on-background">Challenges</h3>
-                            <p class="text-sm text-on-surface-variant mt-1">Special modifications designed to test your sorting limits.</p>
-                        </div>
-                        <div class="flex flex-col gap-2">
-                            <button class="challenge-select-btn w-full p-3 rounded-lg border border-white/10 hover:bg-white/5 hover:border-secondary/50 text-left transition-colors flex items-center justify-between" data-challenge="par">
-                                <div>
-                                    <div class="font-semibold text-on-surface">Par Challenge</div>
-                                    <div class="text-xs text-on-surface-variant">Solve within a fixed maximum move count</div>
-                                </div>
-                                <svg class="w-4 h-4 text-secondary" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>
-                            </button>
-                            <button class="challenge-select-btn w-full p-3 rounded-lg border border-white/10 hover:bg-white/5 hover:border-secondary/50 text-left transition-colors flex items-center justify-between" data-challenge="mystery">
-                                <div>
-                                    <div class="font-semibold text-on-surface">Mystery Sort</div>
-                                    <div class="text-xs text-on-surface-variant">Inner spheres remain hidden until uncovered</div>
-                                </div>
-                                <svg class="w-4 h-4 text-secondary" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>
-                            </button>
-                            <button class="challenge-select-btn w-full p-3 rounded-lg border border-white/10 hover:bg-white/5 hover:border-secondary/50 text-left transition-colors flex items-center justify-between" data-challenge="squeeze">
-                                <div>
-                                    <div class="font-semibold text-on-surface">Tight Squeeze</div>
-                                    <div class="text-xs text-on-surface-variant">One buffer tube has a capacity limit of 3</div>
-                                </div>
-                                <svg class="w-4 h-4 text-secondary" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>
-                            </button>
-                            <button class="challenge-select-btn w-full p-3 rounded-lg border border-white/10 hover:bg-white/5 hover:border-secondary/50 text-left transition-colors flex items-center justify-between" data-challenge="locked">
-                                <div>
-                                    <div class="font-semibold text-on-surface">Locked Tubes</div>
-                                    <div class="text-xs text-on-surface-variant">One buffer tube is locked until a tube completes</div>
-                                </div>
-                                <svg class="w-4 h-4 text-secondary" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>
-                            </button>
+                    <div class="mt-2">
+                        <div class="font-label-sm text-[10px] text-on-surface-variant uppercase tracking-widest mb-3">Deluxe Challenge (6-10 colors):</div>
+                        <div class="grid grid-cols-5 gap-2">
+                            <button class="color-btn premium-lock py-3 border border-outline/10 rounded-full text-xs font-semibold hover:bg-white/5 active:scale-95 transition-all text-on-surface-variant/60" data-colors="6">6 👑</button>
+                            <button class="color-btn premium-lock py-3 border border-outline/10 rounded-full text-xs font-semibold hover:bg-white/5 active:scale-95 transition-all text-on-surface-variant/60" data-colors="7">7 👑</button>
+                            <button class="color-btn premium-lock py-3 border border-outline/10 rounded-full text-xs font-semibold hover:bg-white/5 active:scale-95 transition-all text-on-surface-variant/60" data-colors="8">8 👑</button>
+                            <button class="color-btn premium-lock py-3 border border-outline/10 rounded-full text-xs font-semibold hover:bg-white/5 active:scale-95 transition-all text-on-surface-variant/60" data-colors="9">9 👑</button>
+                            <button class="color-btn premium-lock py-3 border border-outline/10 rounded-full text-xs font-semibold hover:bg-white/5 active:scale-95 transition-all text-on-surface-variant/60" data-colors="10">10 👑</button>
                         </div>
                     </div>
                 </div>
             </div>
+        </div>
+
+        <!-- ==================== 5a. CHALLENGE MODES SCREEN ==================== -->
+        <div id="challenges-menu" class="absolute inset-0 flex flex-col px-container-padding bg-background z-10 hidden pt-16 pb-8 md:pt-10">
+            <!-- Header with Back Button -->
+            <header class="flex items-center justify-between mb-8">
+                <!-- Mechanical 3D Back Arrow Button -->
+                <button id="btn-challenges-back" aria-label="Go Back" class="btn-3d flex items-center justify-center w-12 h-12 rounded-xl">
+                    <svg class="w-6 h-6 text-on-surface" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/>
+                    </svg>
+                </button>
+                <h1 class="font-headline-md-mobile text-headline-md-mobile text-on-background tracking-widest uppercase">Challenges</h1>
+                <div class="w-12 h-12"></div> <!-- Spacer for balance -->
+            </header>
+
+            <div class="flex-1 overflow-y-auto space-y-4 pb-20">
+                <!-- Mode Description Card -->
+                <div class="surface_glass border_glass rounded-2xl p-5 shadow-sm text-left mb-2">
+                    <h3 class="font-semibold text-secondary mb-1">Advanced Game Rules</h3>
+                    <p class="text-sm text-on-surface-variant">Special layout constraints and game modifications designed to test your sorting limits.</p>
+                </div>
+
+                <!-- Challenges Lists styled as premium interactive cards -->
+                <button class="challenge-select-btn w-full p-4 rounded-2xl bg-surface-container/60 border border-outline/10 hover:bg-white/5 text-left transition-colors flex items-center justify-between active:scale-98" data-challenge="par">
+                    <div>
+                        <div class="font-semibold text-on-surface">Par Challenge</div>
+                        <div class="text-xs text-on-surface-variant mt-0.5">Solve the scramble within a fixed maximum move count</div>
+                    </div>
+                    <svg class="w-5 h-5 text-secondary" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>
+                </button>
+
+                <button class="challenge-select-btn w-full p-4 rounded-2xl bg-surface-container/60 border border-outline/10 hover:bg-white/5 text-left transition-colors flex items-center justify-between active:scale-98" data-challenge="mystery">
+                    <div>
+                        <div class="font-semibold text-on-surface">Mystery Sort</div>
+                        <div class="text-xs text-on-surface-variant mt-0.5">Inner spheres remain hidden until you uncover them</div>
+                    </div>
+                    <svg class="w-5 h-5 text-secondary" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>
+                </button>
+
+                <button class="challenge-select-btn w-full p-4 rounded-2xl bg-surface-container/60 border border-outline/10 hover:bg-white/5 text-left transition-colors flex items-center justify-between active:scale-98" data-challenge="squeeze">
+                    <div>
+                        <div class="font-semibold text-on-surface">Tight Squeeze</div>
+                        <div class="text-xs text-on-surface-variant mt-0.5">One buffer tube has a storage limit of only 3 balls</div>
+                    </div>
+                    <svg class="w-5 h-5 text-secondary" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>
+                </button>
+
+                <button class="challenge-select-btn w-full p-4 rounded-2xl bg-surface-container/60 border border-outline/10 hover:bg-white/5 text-left transition-colors flex items-center justify-between active:scale-98" data-challenge="locked">
+                    <div>
+                        <div class="font-semibold text-on-surface">Locked Tubes</div>
+                        <div class="text-xs text-on-surface-variant mt-0.5">One buffer tube remains locked until a sorted tube is completed</div>
+                    </div>
+                    <svg class="w-5 h-5 text-secondary" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>
+                </button>
+            </div>
+        </div>
         </div>
 
         <!-- ==================== 6. DELUXE UNLOCK PAYWALL OVERLAY ==================== -->
