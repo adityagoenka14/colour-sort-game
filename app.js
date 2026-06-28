@@ -415,6 +415,11 @@ function renderBoard() {
         tubeDiv.style.width = tubeWidthStr;
         tubeDiv.dataset.index = tubeIndex;
         
+        // Append realistic flared test tube rim
+        const rim = document.createElement('div');
+        rim.className = 'tube-rim';
+        tubeDiv.appendChild(rim);
+        
         // Selected tube animation
         if (tubeIndex === selectedTube) {
             tubeDiv.classList.add('tube-selected');
@@ -497,6 +502,12 @@ function renderBoard() {
             // Settle gravity slide down animation
             if (lastMoveForAnimation && tubeIndex === lastMoveForAnimation.tubeIndex && ballIndex === lastMoveForAnimation.ballIndex) {
                 ball.classList.add('sphere-animate-fall');
+                // Trigger a light tactile vibration bounce when the ball lands at the bottom
+                setTimeout(() => {
+                    if (navigator.vibrate) {
+                        navigator.vibrate(12); // Short crisp haptic tap
+                    }
+                }, 350);
             }
             
             tubeDiv.appendChild(ball);
@@ -1085,9 +1096,11 @@ function toggleTheme() {
     const isLight = checkbox ? checkbox.checked : document.body.classList.contains('light-theme');
     if (isLight) {
         document.body.classList.add('light-theme');
+        document.documentElement.classList.remove('dark');
         localStorage.setItem('theme', 'light');
     } else {
         document.body.classList.remove('light-theme');
+        document.documentElement.classList.add('dark');
         localStorage.setItem('theme', 'dark');
     }
     updateThemeUI();
@@ -1136,8 +1149,10 @@ function initSettingsUI() {
     const savedTheme = localStorage.getItem('theme');
     if (savedTheme === 'light') {
         document.body.classList.add('light-theme');
+        document.documentElement.classList.remove('dark');
     } else {
         document.body.classList.remove('light-theme');
+        document.documentElement.classList.add('dark');
     }
     updateThemeUI();
     
@@ -1216,11 +1231,51 @@ function getTubeIndexFromPoint(x, y) {
     return parseInt(tubeEl.dataset.index);
 }
 
+// State for current hovered tube during drag/swipe
+let hoverTubeIndex = null;
+
+// Helper to update visual hover highlights during swipe dragging
+function updateHoverHighlight(tgtIndex) {
+    if (hoverTubeIndex !== tgtIndex) {
+        // Remove hover class from old
+        if (hoverTubeIndex !== null) {
+            const oldTube = document.querySelector(`.glass-tube[data-index="${hoverTubeIndex}"]`);
+            if (oldTube) oldTube.classList.remove('tube-hover');
+        }
+        hoverTubeIndex = tgtIndex;
+        // Add hover class to new (only if it's not the selected source tube)
+        if (hoverTubeIndex !== null && hoverTubeIndex !== selectedTube) {
+            const newTube = document.querySelector(`.glass-tube[data-index="${hoverTubeIndex}"]`);
+            if (newTube) newTube.classList.add('tube-hover');
+        }
+    }
+}
+
 // Global release handlers for touch/swipe support
+window.addEventListener('touchmove', (e) => {
+    if (selectedTube !== null) {
+        e.preventDefault(); // Crucial: prevents mobile browser scrolling/touch cancel
+        const touch = e.touches[0];
+        const tgtIndex = getTubeIndexFromPoint(touch.clientX, touch.clientY);
+        updateHoverHighlight(tgtIndex);
+    }
+}, { passive: false });
+
+window.addEventListener('mousemove', (e) => {
+    if (selectedTube !== null) {
+        const tgtIndex = getTubeIndexFromPoint(e.clientX, e.clientY);
+        updateHoverHighlight(tgtIndex);
+    }
+});
+
 window.addEventListener('touchend', (e) => {
     if (selectedTube !== null) {
         const touch = e.changedTouches[0];
         const tgtIndex = getTubeIndexFromPoint(touch.clientX, touch.clientY);
+        
+        // Clear hover highlights
+        updateHoverHighlight(null);
+        
         if (tgtIndex !== null && tgtIndex !== selectedTube) {
             if (isValidMove(selectedTube, tgtIndex)) {
                 executeMove(selectedTube, tgtIndex);
@@ -1236,6 +1291,10 @@ window.addEventListener('touchend', (e) => {
 window.addEventListener('mouseup', (e) => {
     if (selectedTube !== null) {
         const tgtIndex = getTubeIndexFromPoint(e.clientX, e.clientY);
+        
+        // Clear hover highlights
+        updateHoverHighlight(null);
+        
         if (tgtIndex !== null && tgtIndex !== selectedTube) {
             if (isValidMove(selectedTube, tgtIndex)) {
                 executeMove(selectedTube, tgtIndex);
