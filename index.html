@@ -1,162 +1,557 @@
 <!DOCTYPE html>
-<html lang="en">
+<html class="dark" lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Colour Sort Game - Deluxe Edition</title>
-    <link rel="stylesheet" href="styles.css?v=18">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-</head>
-<body>
-    <div id="app-container">
-        <!-- Splash Screen -->
-        <div id="splash-screen" class="app-screen" style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: #121212; display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 1000; transition: opacity 0.5s ease;">
-            <div style="text-align: center;">
-                <div class="splash-spinner" style="border: 4px solid rgba(255, 255, 255, 0.1); border-top: 4px solid #ff007f; border-radius: 50%; width: 50px; height: 50px; animation: spin 1s linear infinite; margin: 0 auto 20px auto;"></div>
-                <h1 style="color: #fff; font-size: 28px; font-weight: 700; letter-spacing: 1px; margin: 0; text-shadow: 0 0 10px rgba(255,0,127,0.5);">Colour Sort Game</h1>
-                <p style="color: #888; font-size: 12px; margin-top: 8px;">Loading resources...</p>
-            </div>
-        </div>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+    <title>Colour Sort - Deluxe</title>
+    <!-- Material Symbols -->
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com" rel="preconnect"/>
+    <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet"/>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <!-- Theme Configuration -->
+    <script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                "secondary": "#d2bbff",
+                "on-primary-fixed": "#3d0023",
+                "inverse-primary": "#983f69",
+                "primary": "#ffbfd7",
+                "on-background": "#efdfe2",
+                "on-surface": "#efdfe2",
+                "on-surface-variant": "#d8c1c8",
+                "on-primary": "#5e0e3a",
+                "surface-container": "#261d20",
+                "secondary-fixed-dim": "#d2bbff",
+                "surface-variant": "#3c3235",
+                "background": "#191114",
+                "on-tertiary-fixed-variant": "#004f54",
+                "surface-container-highest": "#3c3235",
+                "surface-bright": "#40373a",
+                "surface-dim": "#191114",
+                "outline": "#a08b92",
+                "error-container": "#93000a",
+                "on-secondary-fixed-variant": "#543196",
+                "error": "#ffb4ab",
+                "primary-fixed-dim": "#ffb0cf",
+                "secondary-fixed": "#eaddff",
+                "tertiary": "#7de0e8",
+                "surface-tint": "#ffb0cf",
+                "on-error": "#690005",
+                "surface-container-high": "#31282b",
+                "on-primary-container": "#7b2751",
+                "surface-container-low": "#22191c",
+                "surface-container-lowest": "#130c0f",
+                "on-tertiary-container": "#004f54",
+                "surface": "#191114",
+                "tertiary-fixed-dim": "#72d6dd",
+                "on-secondary": "#3d147e",
+                "on-primary-fixed-variant": "#7a2751",
+                "on-secondary-container": "#c6aaff",
+                "inverse-on-surface": "#372e31",
+                "on-tertiary-fixed": "#002022",
+                "primary-fixed": "#ffd9e5",
+                "tertiary-fixed": "#8ff2fa",
+                "inverse-surface": "#efdfe2",
+                "secondary-container": "#563398",
+                "on-error-container": "#ffdad6",
+                "outline-variant": "#534248",
+                "on-tertiary": "#00363a",
+                "primary-container": "#ff94c2",
+                "on-secondary-fixed": "#25005a",
+                "tertiary-container": "#5fc4cc"
+            },
+            "borderRadius": {
+                "DEFAULT": "0.25rem",
+                "lg": "0.5rem",
+                "xl": "0.75rem",
+                "full": "9999px"
+            },
+            "spacing": {
+                "game-column-gap": "20px",
+                "container-padding": "24px",
+                "element-gap": "16px",
+                "touch-target-min": "48px",
+                "unit": "4px"
+            },
+            "fontFamily": {
+                "headline-md": ["Outfit"],
+                "label-sm": ["Outfit"],
+                "headline-md-mobile": ["Outfit"],
+                "display-lg": ["Outfit"],
+                "body-lg": ["Outfit"]
+            },
+            "fontSize": {
+                "headline-md": ["24px", {"lineHeight": "32px", "letterSpacing": "0.1em", "fontWeight": "600"}],
+                "label-sm": ["12px", {"lineHeight": "16px", "letterSpacing": "0.15em", "fontWeight": "600"}],
+                "headline-md-mobile": ["20px", {"lineHeight": "28px", "letterSpacing": "0.08em", "fontWeight": "600"}],
+                "display-lg": ["48px", {"lineHeight": "52px", "letterSpacing": "0.05em", "fontWeight": "700"}],
+                "body-lg": ["18px", {"lineHeight": "26px", "letterSpacing": "0.02em", "fontWeight": "400"}]
+            }
+          }
+        }
+      }
+    </script>
+    <style>
+        body {
+            background-color: #0B0B0E;
+            color: #efdfe2;
+            overflow: hidden;
+            touch-action: none;
+        }
 
-        <!-- Home Screen -->
-        <div id="home-screen" class="app-screen" style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; width: 100vw; background: var(--bg-color); padding: 20px; box-sizing: border-box; text-align: center;">
-            <div class="home-logo-container" style="margin-bottom: 40px;">
-                <div class="logo-tubes" style="display: flex; gap: 8px; justify-content: center; margin-bottom: 20px;">
-                    <div style="width: 20px; height: 60px; border: 2px solid var(--text-primary); border-top: none; border-radius: 0 0 10px 10px; display: flex; flex-direction: column-reverse; padding: 2px; gap: 2px;">
-                        <div style="height: 14px; background: #e91e63; border-radius: 50%;"></div>
-                        <div style="height: 14px; background: #9c27b0; border-radius: 50%;"></div>
-                        <div style="height: 14px; background: #2196f3; border-radius: 50%;"></div>
+        .glass-panel {
+            background: rgba(38, 29, 32, 0.6);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .pulse-glow {
+            animation: pulse-glow 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+
+        @keyframes pulse-glow {
+            0%, 100% { box-shadow: 0 0 15px rgba(210, 187, 255, 0.2); }
+            50% { box-shadow: 0 0 30px rgba(210, 187, 255, 0.6); }
+        }
+
+        .glass-tube {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-top: 1px solid rgba(255, 255, 255, 0.3);
+            box-shadow: inset 0 0 20px rgba(255, 255, 255, 0.02);
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+        }
+
+        .tube-selected {
+            transform: translateY(-15px);
+            border-color: rgba(255, 191, 215, 0.5);
+            box-shadow: 0 -10px 40px -10px rgba(255, 191, 215, 0.3), inset 0 0 20px rgba(255, 191, 215, 0.1);
+        }
+
+        .light-beam {
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 120%;
+            height: 200%;
+            background: linear-gradient(to top, rgba(255, 191, 215, 0.1), transparent);
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.3s;
+            border-radius: 100px;
+        }
+
+        .tube-selected .light-beam {
+            opacity: 1;
+        }
+
+        /* 3D Sphere Styles for 12 colors */
+        .sphere {
+            border-radius: 50%;
+            position: relative;
+            box-shadow: inset -4px -4px 10px rgba(0,0,0,0.5), inset 4px 4px 10px rgba(255,255,255,0.4);
+            margin-bottom: 2px;
+            width: 100%;
+            aspect-ratio: 1/1;
+        }
+
+        /* Ambient glows for specific top spheres */
+        .sphere-selected-glow {
+            box-shadow: 0 0 15px rgba(255, 191, 215, 0.6), inset -4px -4px 10px rgba(0,0,0,0.5), inset 4px 4px 10px rgba(255,255,255,0.4);
+        }
+
+        .sphere-Y { background: radial-gradient(circle at 30% 30%, #fef08a, #854d0e); }
+        .sphere-O { background: radial-gradient(circle at 30% 30%, #ffedd5, #ea580c); }
+        .sphere-P { background: radial-gradient(circle at 30% 30%, #ffbfd7, #983f69); }
+        .sphere-B { background: radial-gradient(circle at 30% 30%, #dbeafe, #1d4ed8); }
+        .sphere-G { background: radial-gradient(circle at 30% 30%, #dcfce7, #15803d); }
+        .sphere-V { background: radial-gradient(circle at 30% 30%, #d2bbff, #563398); }
+        .sphere-R { background: radial-gradient(circle at 30% 30%, #fee2e2, #b91c1c); }
+        .sphere-C { background: radial-gradient(circle at 30% 30%, #7de0e8, #004f54); }
+        .sphere-M { background: radial-gradient(circle at 30% 30%, #fbcfe8, #be185d); }
+        .sphere-T { background: radial-gradient(circle at 30% 30%, #ccfbf1, #0f766e); }
+        .sphere-BR { background: radial-gradient(circle at 30% 30%, #f5e0c3, #78350f); }
+        .sphere-W { background: radial-gradient(circle at 30% 30%, #ffffff, #6b7280); }
+        .sphere-mystery { background: radial-gradient(circle at 30% 30%, #3f3f46, #18181b); }
+
+        .neon-glow-primary { box-shadow: 0 0 25px 5px rgba(255, 191, 215, 0.4); }
+        .neon-glow-secondary { box-shadow: 0 0 25px 5px rgba(210, 187, 255, 0.4); }
+        .neon-glow-tertiary { box-shadow: 0 0 25px 5px rgba(125, 224, 232, 0.4); }
+        .sphere-highlight { background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.7) 0%, transparent 60%); }
+        .sphere-shadow { box-shadow: inset -6px -6px 15px rgba(0, 0, 0, 0.6); }
+
+        @keyframes settle {
+            0% { transform: translateY(-150px); opacity: 0; }
+            50% { opacity: 1; }
+            80% { transform: translateY(10px); }
+            100% { transform: translateY(0); }
+        }
+
+        @keyframes pulse-glow {
+            0%, 100% { opacity: 0.8; filter: brightness(1); }
+            50% { opacity: 1; filter: brightness(1.2); }
+        }
+
+        @keyframes load-line {
+            0% { width: 0%; opacity: 0; }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            100% { width: 100%; opacity: 0; }
+        }
+
+        .animate-settle { animation: settle 1.5s cubic-bezier(0.25, 1, 0.5, 1) forwards; }
+        .animate-pulse-glow { animation: pulse-glow 3s infinite ease-in-out; }
+        .animate-load-line { animation: load-line 2.5s ease-in-out forwards; }
+        .text-glow { text-shadow: 0 0 20px rgba(255, 191, 215, 0.5); }
+        .glow-text { text-shadow: 0 0 20px rgba(255, 215, 0, 0.6), 0 0 40px rgba(255, 215, 0, 0.4); }
+        
+        .neon-button {
+            box-shadow: 0 0 20px rgba(125, 224, 232, 0.3);
+            transition: all 0.3s ease;
+        }
+        .neon-button:hover {
+            box-shadow: 0 0 30px rgba(125, 224, 232, 0.5);
+            transform: scale(1.05);
+        }
+
+        @keyframes sweep {
+            0% { transform: translateY(100vh) rotate(0deg); opacity: 1; }
+            100% { transform: translateY(-10vh) rotate(360deg); opacity: 0; }
+        }
+        .particle {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background: #ffbfd7;
+            border-radius: 50%;
+            animation: sweep 3s linear infinite;
+        }
+
+        .border_glass { border: 1px solid rgba(255, 255, 255, 0.1); }
+        .surface_glass { background: rgba(38, 29, 32, 0.6); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); }
+
+        .toggle-checkbox:checked {
+            right: 0;
+            border-color: #ffbfd7;
+            transform: translateX(24px);
+        }
+        .toggle-checkbox:checked + .toggle-label {
+            background-color: #ff94c2;
+        }
+
+        /* Overlay modal screens container */
+        .overlay {
+            position: fixed;
+            inset: 0;
+            background-color: rgba(11, 11, 14, 0.85);
+            backdrop-filter: blur(8px);
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+        }
+
+        /* Locked tubes indicator */
+        .locked-tube-lock {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(11, 11, 14, 0.7);
+            border-radius: 12px;
+            z-index: 10;
+        }
+
+        /* Hide elements helper */
+        .hidden {
+            display: none !important;
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background font-body-lg h-screen w-screen overflow-hidden select-none">
+    <div id="app-container" class="relative w-full h-full">
+
+        <!-- ==================== 1. SPLASH SCREEN ==================== -->
+        <div id="splash-screen" class="fixed inset-0 z-[1000] bg-[#0B0B0E] flex flex-col items-center justify-center transition-opacity duration-500">
+            <!-- Ambient Background Glow -->
+            <div class="absolute inset-0 flex items-center justify-center pointer-events-none opacity-20">
+                <div class="w-96 h-96 bg-primary rounded-full blur-[100px] animate-pulse-glow"></div>
+            </div>
+            <!-- Main Content Container -->
+            <div class="z-10 flex flex-col items-center gap-16">
+                <!-- Game Title -->
+                <h1 class="font-display-lg text-display-lg text-primary text-glow tracking-[0.2em] text-center">
+                    COLOUR<br/>SORT
+                </h1>
+                <!-- Glass Sorting Tube Graphic -->
+                <div class="relative w-24 h-64 border-x border-b border-outline/40 bg-surface/20 backdrop-blur-md rounded-b-[2.5rem] flex flex-col justify-end items-center p-3 gap-2 shadow-[inset_0_-5px_20px_rgba(255,255,255,0.05),0_10px_30px_rgba(0,0,0,0.8)] border-t-0">
+                    <div class="absolute top-0 left-0 w-full h-[2px] bg-gradient-to-r from-transparent via-white/30 to-transparent"></div>
+                    <!-- Spheres -->
+                    <div class="w-16 h-16 rounded-full bg-tertiary shrink-0 relative overflow-hidden neon-glow-tertiary animate-settle opacity-0" style="animation-delay: 0.5s;">
+                        <div class="absolute inset-0 sphere-highlight rounded-full mix-blend-screen"></div>
+                        <div class="absolute inset-0 sphere-shadow rounded-full"></div>
                     </div>
-                    <div style="width: 20px; height: 60px; border: 2px solid var(--text-primary); border-top: none; border-radius: 0 0 10px 10px; display: flex; flex-direction: column-reverse; padding: 2px; gap: 2px;">
-                        <div style="height: 14px; background: #2196f3; border-radius: 50%;"></div>
-                        <div style="height: 14px; background: #9c27b0; border-radius: 50%;"></div>
-                        <div style="height: 14px; background: #e91e63; border-radius: 50%;"></div>
+                    <div class="w-16 h-16 rounded-full bg-secondary shrink-0 relative overflow-hidden neon-glow-secondary">
+                        <div class="absolute inset-0 sphere-highlight rounded-full mix-blend-screen"></div>
+                        <div class="absolute inset-0 sphere-shadow rounded-full"></div>
+                    </div>
+                    <div class="w-16 h-16 rounded-full bg-primary shrink-0 relative overflow-hidden neon-glow-primary">
+                        <div class="absolute inset-0 sphere-highlight rounded-full mix-blend-screen"></div>
+                        <div class="absolute inset-0 sphere-shadow rounded-full"></div>
                     </div>
                 </div>
-                <h1 style="font-size: 36px; font-weight: 700; margin: 0; background: linear-gradient(135deg, #ff007f, #7f00ff); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Colour Sort</h1>
-                <p style="font-size: 14px; color: var(--text-secondary); margin: 5px 0 0 0; letter-spacing: 2px; text-transform: uppercase;">Deluxe Edition</p>
+            </div>
+            <!-- Neon Loading Line Indicator -->
+            <div class="absolute bottom-0 left-0 h-1 bg-gradient-to-r from-transparent via-primary to-transparent w-full opacity-0 animate-load-line"></div>
+            <div class="absolute bottom-0 left-0 h-[2px] bg-white w-full opacity-0 animate-load-line mix-blend-overlay"></div>
+        </div>
+
+        <!-- ==================== 2. HOME SCREEN ==================== -->
+        <div id="home-screen" class="absolute inset-0 flex flex-col items-center justify-center px-container-padding text-center bg-background z-10 hidden">
+            <!-- Ambient Backlight -->
+            <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-72 h-72 bg-primary/10 rounded-full blur-[120px] pointer-events-none"></div>
+            
+            <div class="flex flex-col items-center mb-12 relative z-10">
+                <div class="flex gap-element-gap items-end mb-6">
+                    <div class="w-8 h-20 rounded-full glass-panel relative overflow-hidden flex flex-col justify-end p-1 pb-2 shadow-[0_0_20px_rgba(255,191,215,0.1)]">
+                        <div class="w-full h-6 bg-tertiary rounded-full mb-1"></div>
+                        <div class="w-full h-6 bg-primary rounded-full"></div>
+                    </div>
+                    <div class="w-8 h-24 rounded-full glass-panel relative overflow-hidden flex flex-col justify-end p-1 pb-2 shadow-[0_0_20px_rgba(210,187,255,0.1)] -mb-2">
+                        <div class="w-full h-6 bg-secondary rounded-full mb-1"></div>
+                        <div class="w-full h-6 bg-secondary rounded-full mb-1"></div>
+                        <div class="w-full h-6 bg-tertiary rounded-full"></div>
+                    </div>
+                </div>
+                <h1 class="font-display-lg text-display-lg text-transparent bg-clip-text bg-gradient-to-r from-primary to-secondary tracking-widest">COLOUR SORT</h1>
+                <p class="text-label-sm text-secondary tracking-[0.25em] uppercase font-semibold mt-1">Deluxe Edition</p>
             </div>
             
-            <div class="home-buttons-container" style="display: flex; flex-direction: column; gap: 14px; width: 100%; max-width: 320px;">
-                <button id="btn-home-play" class="play-again-btn" style="background: linear-gradient(135deg, #ff007f, #7f00ff); font-size: 16px; padding: 14px; border: none; box-shadow: 0 4px 15px rgba(127, 0, 255, 0.4);">🎮 PLAY CLASSIC</button>
-                <button id="btn-home-challenges" class="play-again-btn" style="background: #1e90ff; font-size: 16px; padding: 14px; border: none;">🏆 CHALLENGES</button>
-                <button id="btn-home-settings" class="play-again-btn secondary-btn" style="font-size: 16px; padding: 14px; margin-top: 0;">⚙️ SETTINGS</button>
-                <button id="btn-home-premium" class="play-again-btn premium-btn-glowing" style="font-size: 16px; padding: 14px; border: none;">👑 UNLOCK DELUXE</button>
+            <div class="w-full max-w-xs flex flex-col gap-element-gap relative z-10">
+                <!-- Primary Action -->
+                <button id="btn-home-play" class="w-full h-[60px] rounded-xl bg-gradient-to-r from-primary to-inverse-primary text-on-primary-fixed font-headline-md-mobile text-headline-md-mobile flex items-center justify-center shadow-[0_0_30px_rgba(255,191,215,0.4)] border border-primary/40 transition-all duration-300 active:scale-95 hover:brightness-110">
+                    PLAY CLASSIC
+                </button>
+                <!-- Secondary Actions -->
+                <button id="btn-home-challenges" class="w-full h-[56px] rounded-xl glass-panel text-on-surface font-headline-md-mobile text-headline-md-mobile flex items-center justify-center transition-all duration-300 active:scale-95 hover:bg-surface-container-high border_glass">
+                    CHALLENGE MODES
+                </button>
+                <button id="btn-home-settings" class="w-full h-[56px] rounded-xl glass-panel text-on-surface font-headline-md-mobile text-headline-md-mobile flex items-center justify-center transition-all duration-300 active:scale-95 hover:bg-surface-container-high border_glass">
+                    SETTINGS
+                </button>
+                <!-- Promotional Action -->
+                <button id="btn-home-premium" class="w-full h-[56px] rounded-xl glass-panel text-secondary border border-secondary/40 font-headline-md-mobile text-headline-md-mobile flex items-center justify-center transition-all duration-300 active:scale-95 hover:bg-secondary/10 pulse-glow mt-4">
+                    <span class="material-symbols-outlined mr-2" style="font-variation-settings: 'FILL' 1;">workspace_premium</span>
+                    UNLOCK DELUXE
+                </button>
             </div>
         </div>
 
-        <!-- Game Screen -->
-        <div id="game-view" class="app-screen hidden" style="display: none;">
-            <!-- Header -->
-            <header>
-                <div class="logo-area">
-                    <span class="premium-badge">PRO</span>
-                    <h1>Colour Sort Game</h1>
-                    <span style="font-size: 10px; color: var(--text-secondary); margin-left: 4px; vertical-align: middle;">v18</span>
-                </div>
-                
-                <!-- Dynamic HUD -->
-                <div id="hud" class="hud-container">
-                    <div class="hud-info">
-                        <span id="current-mode-display">Classic Mode (5 Colors)</span>
-                        <span id="move-counter-display" class="hidden">Moves: 0 / 50</span>
-                    </div>
-                    <div class="hud-buttons">
-                        <button id="btn-menu" class="hud-btn" title="Go to Home Screen">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
-                            Home
-                        </button>
-                        <button id="btn-undo" class="hud-btn" title="Undo">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7v6h6"/><path d="M21 17a9 9 0 0 0-9-9 9 9 0 0 0-6 2.3L3 13"/></svg>
-                            Undo
-                        </button>
-                        <button id="btn-hint" class="hud-btn" title="Hint">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
-                            Hint
-                        </button>
-                        <button id="btn-reset" class="hud-btn" title="Reset Level">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"/></svg>
-                            <span id="reset-btn-text">Reset (3)</span>
-                        </button>
+        <!-- ==================== 3. GAME VIEW SCREEN ==================== -->
+        <div id="game-view" class="absolute inset-0 flex flex-col h-full w-full bg-[#0B0B0E] hidden">
+            <!-- Top App Bar -->
+            <header class="w-full z-50 flex items-center justify-between px-game-column-gap h-20 bg-transparent border-b border-white/10 shrink-0">
+                <button id="btn-menu" class="text-primary hover:opacity-80 active:scale-95 transition-transform flex items-center justify-center w-touch-target-min h-touch-target-min rounded-full hover:bg-white/5">
+                    <span class="material-symbols-outlined text-[28px]">home</span>
+                </button>
+                <div class="flex flex-col items-center">
+                    <h1 class="text-headline-md-mobile font-headline-md-mobile text-primary tracking-widest">COLOUR SORT</h1>
+                    <div class="px-3 py-0.5 rounded-full border border-white/10 bg-white/5 mt-1">
+                        <span id="current-mode-display" class="font-label-sm text-[10px] text-on-surface-variant uppercase tracking-wider">Classic • 5 Colors</span>
                     </div>
                 </div>
-                
-                <div id="hint-display" class="hint-text hidden"></div>
+                <button id="btn-undo" class="text-primary hover:opacity-80 active:scale-95 transition-transform flex items-center justify-center w-touch-target-min h-touch-target-min rounded-full hover:bg-white/5">
+                    <span class="material-symbols-outlined text-[28px]">undo</span>
+                </button>
             </header>
 
-            <!-- Main Board -->
-            <main id="game-board">
-                <!-- Tubes injected here -->
+            <!-- Main Gameplay Canvas -->
+            <main class="flex-1 flex flex-col justify-center items-center px-container-padding relative overflow-hidden py-4">
+                <!-- Move Counter HUD Overlay -->
+                <div id="move-counter-display" class="mb-4 font-label-sm text-label-sm text-secondary tracking-widest uppercase border border-secondary/20 px-4 py-1.5 rounded-full bg-secondary/5">
+                    Moves: 0
+                </div>
+
+                <!-- Game Board Grid -->
+                <div id="game-board" class="flex flex-row justify-center items-end gap-3 sm:gap-4 md:gap-5 w-full h-[360px] sm:h-[400px] md:h-[440px]">
+                    <!-- Dynamic tubes will be rendered here by app.js -->
+                </div>
+
+                <!-- Solver Hint Text overlay -->
+                <div id="hint-display" class="mt-6 font-body-lg text-body-lg text-center text-tertiary px-4 py-2 border border-tertiary/20 rounded-xl bg-tertiary/5 max-w-xs transition-opacity duration-300 hidden">
+                    Hint: Move top ball
+                </div>
             </main>
-            
-            <!-- Bottom Controls -->
-            <footer>
-                <div id="debug-display" style="font-size: 10px; color: #777; margin-top: 10px; font-family: monospace; text-align: center;"></div>
-            </footer>
+
+            <!-- Navigation Controls (Mobile footer) -->
+            <nav class="w-full z-50 flex justify-around items-center px-container-padding pb-8 pt-4 bg-surface-container-low/60 backdrop-blur-xl border-t border-white/5 shadow-2xl rounded-t-xl shrink-0">
+                <button id="btn-home-nav" class="flex flex-col items-center justify-center text-on-surface-variant p-3 hover:text-primary active:scale-90 transition-all duration-200">
+                    <span class="material-symbols-outlined text-[28px]">home</span>
+                </button>
+                <button id="btn-undo-nav" class="flex flex-col items-center justify-center text-on-surface-variant p-3 hover:text-primary active:scale-90 transition-all duration-200">
+                    <span class="material-symbols-outlined text-[28px]">undo</span>
+                </button>
+                <!-- Active Hint Bulb button -->
+                <button id="btn-hint" class="flex flex-col items-center justify-center bg-secondary-container text-on-secondary-container rounded-full p-4 shadow-[0_0_20px_rgba(210,187,255,0.4)] hover:brightness-110 active:scale-90 transition-all duration-200">
+                    <span class="material-symbols-outlined text-[28px]" style="font-variation-settings: 'FILL' 1;">lightbulb</span>
+                </button>
+                <button id="btn-reset" class="flex flex-col items-center justify-center text-on-surface-variant p-3 hover:text-primary active:scale-90 transition-all duration-200">
+                    <span id="reset-btn-text" class="hidden">Reset (3)</span>
+                    <span class="material-symbols-outlined text-[28px]">refresh</span>
+                </button>
+            </nav>
+
+            <!-- Minimal Debug footer display -->
+            <div id="debug-display" class="absolute bottom-2 left-2 text-[9px] text-on-surface-variant/20 font-mono pointer-events-none"></div>
         </div>
 
-        <!-- Menu / Mode Selector Modal (Shows on start & when clicking Menu) -->
-        <div id="menu-overlay" class="overlay">
-            <div class="overlay-content menu-content">
-                <h2>Select Game Mode <span style="font-size: 11px; font-weight: normal; color: var(--text-secondary);">v18</span></h2>
-                <p class="menu-subtitle">Choose a mode to begin sorting</p>
-                
-                <div class="menu-sections">
-                    <!-- Classic Mode Config -->
-                    <div class="menu-card">
-                        <h3>Classic Mode</h3>
-                        <p>Sort the colors into matching tubes. Any ball can be placed anywhere.</p>
-                        
-                        <div class="color-select-title">Select Colors (3 - 5):</div>
-                        <div class="color-grid">
-                            <button class="color-btn" data-colors="3">3</button>
-                            <button class="color-btn" data-colors="4">4</button>
-                            <button class="color-btn active" data-colors="5">5</button>
+        <!-- ==================== 4. SETTINGS SCREEN OVERLAY ==================== -->
+        <div id="settings-overlay" class="fixed inset-0 z-[120] bg-background/95 backdrop-blur-md flex flex-col px-container-padding pt-16 pb-8 md:max-w-md mx-auto hidden">
+            <!-- Header -->
+            <header class="flex items-center justify-between mb-8">
+                <button id="btn-settings-close" aria-label="Close Settings" class="w-[48px] h-[48px] flex items-center justify-center text-on-surface-variant hover:opacity-80 active:scale-95 transition-transform rounded-full hover:bg-white/5">
+                    <span class="material-symbols-outlined text-[28px]">close</span>
+                </button>
+                <h1 class="font-headline-md-mobile text-headline-md-mobile text-on-background tracking-widest uppercase">Settings</h1>
+                <div class="w-[48px] h-[48px]"></div> <!-- Spacer -->
+            </header>
+            <!-- Scrollable Content -->
+            <div class="flex-1 overflow-y-auto space-y-6 pb-20">
+                <!-- Display Section -->
+                <section class="flex flex-col gap-unit">
+                    <h2 class="font-label-sm text-label-sm text-on-surface-variant ml-4 uppercase tracking-[0.15em] mb-2">Display</h2>
+                    <div class="surface_glass border_glass rounded-xl p-4 flex flex-col gap-4">
+                        <div class="flex items-center justify-between h-[48px]">
+                            <div class="flex items-center gap-4">
+                                <span class="material-symbols-outlined text-secondary" style="font-variation-settings: 'FILL' 1;">dark_mode</span>
+                                <span class="font-body-lg text-body-lg text-on-surface">Theme Mode</span>
+                            </div>
+                            <div class="relative inline-block w-12 mr-2 align-middle select-none transition duration-200 ease-in">
+                                <input id="btn-settings-theme" class="toggle-checkbox absolute block w-6 h-6 rounded-full bg-white border-4 appearance-none cursor-pointer z-10 transition-transform duration-200 ease-in-out left-0 top-0 border-surface-variant" name="toggle" type="checkbox"/>
+                                <label class="toggle-label block overflow-hidden h-6 rounded-full bg-surface-variant cursor-pointer transition-colors duration-200 ease-in-out" for="btn-settings-theme"></label>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                <!-- Audio Section -->
+                <section class="flex flex-col gap-unit">
+                    <h2 class="font-label-sm text-label-sm text-on-surface-variant ml-4 uppercase tracking-[0.15em] mb-2">Audio</h2>
+                    <div class="surface_glass border_glass rounded-xl p-4 flex flex-col gap-4">
+                        <div class="flex items-center justify-between h-[48px]">
+                            <div class="flex items-center gap-4">
+                                <span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">volume_up</span>
+                                <span id="settings-sound-text" class="font-body-lg text-body-lg text-on-surface">Sound Effects</span>
+                            </div>
+                            <div class="relative inline-block w-12 mr-2 align-middle select-none transition duration-200 ease-in">
+                                <input id="btn-settings-sound" class="toggle-checkbox absolute block w-6 h-6 rounded-full bg-white border-4 appearance-none cursor-pointer z-10 transition-transform duration-200 ease-in-out left-0 top-0 border-surface-variant" name="toggle" type="checkbox"/>
+                                <label class="toggle-label block overflow-hidden h-6 rounded-full bg-surface-variant cursor-pointer transition-colors duration-200 ease-in-out" for="btn-settings-sound"></label>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                <!-- Data reset section -->
+                <section class="flex flex-col gap-unit">
+                    <h2 class="font-label-sm text-label-sm text-on-surface-variant ml-4 uppercase tracking-[0.15em] mb-2">System</h2>
+                    <div class="surface_glass border_glass rounded-xl p-4 flex flex-col gap-4">
+                        <div class="flex items-center justify-between h-[48px]">
+                            <span class="font-body-lg text-body-lg text-on-surface">Clear Game Data</span>
+                            <button id="btn-settings-clear" class="px-4 py-2 bg-error text-on-error rounded-xl font-label-sm hover:brightness-110 active:scale-95 transition-transform">
+                                Clear
+                            </button>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </div>
+
+        <!-- ==================== 5. MODE SELECTOR MENU OVERLAY ==================== -->
+        <div id="menu-overlay" class="overlay hidden">
+            <div class="glass-panel w-full max-w-md rounded-2xl p-6 flex flex-col border_glass relative z-50 text-left max-h-[85vh] overflow-y-auto">
+                <header class="flex justify-between items-center mb-6 shrink-0">
+                    <div>
+                        <h2 class="font-headline-md text-headline-md text-primary tracking-wider">GAME MODES</h2>
+                        <p class="font-label-sm text-[10px] text-on-surface-variant tracking-wider uppercase mt-1">Select board difficulty or challenge</p>
+                    </div>
+                    <button id="btn-menu-close" class="text-primary hover:opacity-80 active:scale-95 transition-transform w-[40px] h-[40px] flex items-center justify-center rounded-full hover:bg-white/5">
+                        <span class="material-symbols-outlined text-[24px]">close</span>
+                    </button>
+                </header>
+
+                <div class="space-y-6">
+                    <!-- Classic Mode Settings -->
+                    <div class="surface_glass border_glass rounded-xl p-4 flex flex-col gap-4">
+                        <div class="border-b border-white/5 pb-2">
+                            <h3 class="font-headline-md-mobile text-headline-md-mobile text-on-background">Classic Mode</h3>
+                            <p class="text-sm text-on-surface-variant mt-1">Sort colors into match tubes. Relaxed play constraints.</p>
                         </div>
                         
-                        <div class="color-select-title premium-title">Premium Levels (6 - 10):</div>
-                        <div class="color-grid premium-grid">
-                            <button class="color-btn premium-lock" data-colors="6">6 👑</button>
-                            <button class="color-btn premium-lock" data-colors="7">7 👑</button>
-                            <button class="color-btn premium-lock" data-colors="8">8 👑</button>
-                            <button class="color-btn premium-lock" data-colors="9">9 👑</button>
-                            <button class="color-btn premium-lock" data-colors="10">10 👑</button>
+                        <div>
+                            <div class="font-label-sm text-[10px] text-on-surface-variant uppercase tracking-widest mb-2">Standard Colors (3-5):</div>
+                            <div class="grid grid-cols-3 gap-2">
+                                <button class="color-btn py-2 border border-white/10 rounded-lg text-center hover:bg-white/5 hover:border-primary/50 transition-colors active:scale-95" data-colors="3">3</button>
+                                <button class="color-btn py-2 border border-white/10 rounded-lg text-center hover:bg-white/5 hover:border-primary/50 transition-colors active:scale-95" data-colors="4">4</button>
+                                <button class="color-btn active py-2 border border-primary bg-primary/20 rounded-lg text-center hover:bg-white/5 transition-colors active:scale-95 text-primary" data-colors="5">5</button>
+                            </div>
+                        </div>
+
+                        <div>
+                            <div class="font-label-sm text-[10px] text-on-surface-variant uppercase tracking-widest mb-2">Deluxe Colors (6-10):</div>
+                            <div class="grid grid-cols-5 gap-1.5">
+                                <button class="color-btn premium-lock py-2 border border-white/5 rounded-lg text-xs hover:bg-white/5 transition-colors text-on-surface-variant/50" data-colors="6">6 👑</button>
+                                <button class="color-btn premium-lock py-2 border border-white/5 rounded-lg text-xs hover:bg-white/5 transition-colors text-on-surface-variant/50" data-colors="7">7 👑</button>
+                                <button class="color-btn premium-lock py-2 border border-white/5 rounded-lg text-xs hover:bg-white/5 transition-colors text-on-surface-variant/50" data-colors="8">8 👑</button>
+                                <button class="color-btn premium-lock py-2 border border-white/5 rounded-lg text-xs hover:bg-white/5 transition-colors text-on-surface-variant/50" data-colors="9">9 👑</button>
+                                <button class="color-btn premium-lock py-2 border border-white/5 rounded-lg text-xs hover:bg-white/5 transition-colors text-on-surface-variant/50" data-colors="10">10 👑</button>
+                            </div>
                         </div>
                     </div>
 
-                    <!-- Hard / Challenge Modes -->
-                    <div class="menu-card challenge-card">
-                        <h3>Challenge Modes</h3>
-                        <p>No color constraints, but with rules designed to stretch your brain.</p>
-                        
-                        <div class="challenge-grid">
-                            <button class="challenge-select-btn" data-challenge="par">
-                                <strong>Par Challenge</strong>
-                                <span>Solve in limited moves</span>
+                    <!-- Challenge Modes -->
+                    <div class="surface_glass border_glass rounded-xl p-4 flex flex-col gap-3">
+                        <div class="border-b border-white/5 pb-2">
+                            <h3 class="font-headline-md-mobile text-headline-md-mobile text-on-background">Challenges</h3>
+                            <p class="text-sm text-on-surface-variant mt-1">Special modifications designed to test your sorting limits.</p>
+                        </div>
+                        <div class="flex flex-col gap-2">
+                            <button class="challenge-select-btn w-full p-3 rounded-lg border border-white/10 hover:bg-white/5 hover:border-secondary/50 text-left transition-colors flex items-center justify-between" data-challenge="par">
+                                <div>
+                                    <div class="font-semibold text-on-surface">Par Challenge</div>
+                                    <div class="text-xs text-on-surface-variant">Solve within a fixed maximum move count</div>
+                                </div>
+                                <span class="material-symbols-outlined text-secondary">arrow_forward_ios</span>
                             </button>
-                            <button class="challenge-select-btn" data-challenge="mystery">
-                                <strong>Mystery Sort</strong>
-                                <span>Lower balls are hidden</span>
+                            <button class="challenge-select-btn w-full p-3 rounded-lg border border-white/10 hover:bg-white/5 hover:border-secondary/50 text-left transition-colors flex items-center justify-between" data-challenge="mystery">
+                                <div>
+                                    <div class="font-semibold text-on-surface">Mystery Sort</div>
+                                    <div class="text-xs text-on-surface-variant">Inner spheres remain hidden until uncovered</div>
+                                </div>
+                                <span class="material-symbols-outlined text-secondary">arrow_forward_ios</span>
                             </button>
-                            <button class="challenge-select-btn" data-challenge="squeeze">
-                                <strong>Tight Squeeze</strong>
-                                <span>Micro 3-capacity buffer tube</span>
+                            <button class="challenge-select-btn w-full p-3 rounded-lg border border-white/10 hover:bg-white/5 hover:border-secondary/50 text-left transition-colors flex items-center justify-between" data-challenge="squeeze">
+                                <div>
+                                    <div class="font-semibold text-on-surface">Tight Squeeze</div>
+                                    <div class="text-xs text-on-surface-variant">One buffer tube has a capacity limit of 3</div>
+                                </div>
+                                <span class="material-symbols-outlined text-secondary">arrow_forward_ios</span>
                             </button>
-                            <button class="challenge-select-btn" data-challenge="locked">
-                                <strong>Locked Tubes</strong>
-                                <span>Solve one tube to unlock the buffer</span>
-                            </button>
-                    </div>
-                </div>
-
-                <!-- Settings -->
-                    <div class="menu-card settings-card">
-                        <h3>Settings</h3>
-                        <div class="settings-row">
-                            <span>Theme Mode:</span>
-                            <button id="btn-theme-toggle" class="theme-btn">
-                                <span id="theme-btn-icon">🌙</span>
-                                <span id="theme-btn-text">Dark Mode</span>
+                            <button class="challenge-select-btn w-full p-3 rounded-lg border border-white/10 hover:bg-white/5 hover:border-secondary/50 text-left transition-colors flex items-center justify-between" data-challenge="locked">
+                                <div>
+                                    <div class="font-semibold text-on-surface">Locked Tubes</div>
+                                    <div class="text-xs text-on-surface-variant">One buffer tube is locked until a tube completes</div>
+                                </div>
+                                <span class="material-symbols-outlined text-secondary">arrow_forward_ios</span>
                             </button>
                         </div>
                     </div>
@@ -164,102 +559,146 @@
             </div>
         </div>
 
-        <!-- Paywall Modal -->
+        <!-- ==================== 6. DELUXE UNLOCK PAYWALL OVERLAY ==================== -->
         <div id="paywall-overlay" class="overlay hidden">
-            <div class="overlay-content paywall-content">
-                <span class="crown-icon">👑</span>
-                <h2>Unlock Deluxe Edition</h2>
-                <p>Play with 6 to 10 colors for the ultimate sorting challenge, unlock premium neon themes, and disable all ads!</p>
+            <div class="glass-panel w-full max-w-sm rounded-2xl p-8 flex flex-col items-center text-center border_glass shadow-2xl relative">
+                <span class="text-5xl mb-4 animate-bounce">👑</span>
+                <h2 class="font-display-lg text-display-lg text-primary text-glow mb-2">Deluxe Edition</h2>
+                <p class="text-sm text-on-surface-variant mb-6">Play with 6 to 10 colors, unlock neon themes, and get unlimited hints and game resets!</p>
                 
-                <div class="paywall-features">
-                    <div class="feature-item">✓ Unlimited access to 6+ color boards</div>
-                    <div class="feature-item">✓ Dark & Neon aesthetic customization</div>
-                    <div class="feature-item">✓ Infinite hints and path deviation trackers</div>
+                <div class="w-full text-left space-y-2 mb-8">
+                    <div class="flex items-center gap-2 text-sm text-on-surface">
+                        <span class="material-symbols-outlined text-primary text-base">check_circle</span>
+                        <span>Access difficulty levels with 6+ colors</span>
+                    </div>
+                    <div class="flex items-center gap-2 text-sm text-on-surface">
+                        <span class="material-symbols-outlined text-primary text-base">check_circle</span>
+                        <span>Unlock glassmorphism custom themes</span>
+                    </div>
+                    <div class="flex items-center gap-2 text-sm text-on-surface">
+                        <span class="material-symbols-outlined text-primary text-base">check_circle</span>
+                        <span>Infinite hints & deviation solving</span>
+                    </div>
                 </div>
 
-                <div class="price-tag">$1.99 one-time purchase</div>
+                <div class="font-headline-md text-headline-md text-[#FFD700] mb-6">$1.99 one-time payment</div>
 
-                <button id="btn-paywall-buy" class="buy-btn">Unlock Now (Mock Checkout)</button>
-                <button id="btn-paywall-close" class="close-text-btn">Maybe Later</button>
+                <button id="btn-paywall-buy" class="w-full py-3.5 bg-primary text-on-primary font-bold rounded-xl active:scale-95 transition-transform hover:brightness-110 shadow-lg">
+                    Unlock Now
+                </button>
+                <button id="btn-paywall-close" class="mt-4 text-xs text-on-surface-variant/80 hover:text-on-surface underline">
+                    Maybe Later
+                </button>
             </div>
         </div>
-        <!-- Resets Paywall / Ad Modal -->
+
+        <!-- ==================== 7. RESETS EXHAUSTED / AD OVERLAY ==================== -->
         <div id="reset-paywall-overlay" class="overlay hidden">
-            <div class="overlay-content paywall-content">
-                <span class="crown-icon">⚡</span>
-                <h2>Resets Exhausted</h2>
-                <p id="ad-status-text">You have used all 3 free resets for today. Unlock unlimited resets forever or watch a short rewarded ad to reset now!</p>
-                
-                <div class="paywall-features" style="margin: 10px auto;">
-                    <div class="feature-item">✓ Instantly restore any level to start</div>
-                    <div class="feature-item">✓ Keep your current level layout</div>
-                    <div class="feature-item">✓ No limits on trial runs</div>
+            <div class="glass-panel w-full max-w-sm rounded-2xl p-8 flex flex-col items-center text-center border_glass shadow-2xl relative">
+                <span class="text-5xl mb-4">⚡</span>
+                <h2 class="font-headline-md text-headline-md text-secondary mb-2">Resets Exhausted</h2>
+                <p id="ad-status-text" class="text-sm text-on-surface-variant mb-6">You've used all 3 daily free level resets. Watch a short rewarded ad or buy unlimited resets to continue.</p>
+
+                <div id="ad-loader" class="hidden flex flex-col items-center gap-2 mb-6">
+                    <div class="w-8 h-8 border-4 border-white/10 border-t-secondary rounded-full animate-spin"></div>
+                    <span id="ad-countdown" class="text-xs text-on-surface-variant">Simulating ad playback (4s)...</span>
                 </div>
 
-                <div id="ad-loader" class="hidden" style="margin: 15px 0;">
-                    <div class="spinner" style="border: 4px solid #f3f3f3; border-top: 4px solid #1e90ff; border-radius: 50%; width: 30px; height: 30px; animation: spin 1s linear infinite; margin: 0 auto 10px auto;"></div>
-                    <span id="ad-countdown">Watching ad (4s)...</span>
+                <div class="flex flex-col w-full gap-3">
+                    <button id="btn-watch-ad" class="w-full py-3.5 bg-gradient-to-r from-green-500 to-emerald-600 text-white font-bold rounded-xl active:scale-95 transition-transform hover:brightness-110 shadow-lg">
+                        📺 Watch Ad (1 Reset)
+                    </button>
+                    <button id="btn-reset-buy" class="w-full py-3.5 bg-secondary text-on-secondary font-bold rounded-xl active:scale-95 transition-transform hover:brightness-110 shadow-lg">
+                        Unlock Unlimited ($1.99)
+                    </button>
+                    <button id="btn-reset-close" class="mt-2 text-xs text-on-surface-variant hover:text-on-surface">
+                        Cancel
+                    </button>
                 </div>
-
-                <button id="btn-watch-ad" class="buy-btn" style="background: linear-gradient(135deg, #4caf50, #2e7d32); color: #fff; margin-bottom: 8px;">Watch Ad for 1 Free Reset</button>
-                <button id="btn-reset-buy" class="buy-btn">Unlock Unlimited Resets ($1.99)</button>
-                <button id="btn-reset-close" class="close-text-btn">Cancel</button>
             </div>
         </div>
 
-        <!-- Game Over Modal (Moves out) -->
+        <!-- ==================== 8. OUT OF MOVES GAME OVER OVERLAY ==================== -->
         <div id="gameover-overlay" class="overlay hidden">
-            <div class="overlay-content gameover-content">
-                <h2>💥 OUT OF MOVES 💥</h2>
-                <p>You ran out of moves on this Par Challenge!</p>
-                <button id="btn-gameover-retry" class="play-again-btn">Try Again</button>
-                <button id="btn-gameover-menu" class="play-again-btn secondary-btn">Back to Menu</button>
-            </div>
-        </div>
-
-        <!-- Win Overlay -->
-        <div id="win-overlay" class="overlay hidden">
-            <div class="overlay-content win-content">
-                <h2>🎉 YOU WIN! 🎉</h2>
-                <p id="win-message">Amazing! You sorted all colors perfectly.</p>
-                <button id="btn-win-retry-same" class="play-again-btn" style="background: #1e90ff; margin-bottom: 8px;">Try Same Level Again</button>
-                <button id="btn-win-replay" class="play-again-btn">Play Next Level</button>
-                <button id="btn-win-menu" class="play-again-btn secondary-btn">Back to Menu</button>
-            </div>
-        </div>
-
-        <!-- Settings Overlay -->
-        <div id="settings-overlay" class="overlay hidden">
-            <div class="overlay-content settings-content" style="max-width: 360px;">
-                <h2>Game Settings</h2>
-                <p class="menu-subtitle" style="margin-bottom: 20px;">Customize your game experience</p>
+            <div class="glass-panel w-full max-w-sm rounded-2xl p-8 flex flex-col items-center text-center border_glass shadow-2xl relative">
+                <span class="text-5xl mb-4 animate-bounce">💥</span>
+                <h2 class="font-display-lg text-display-lg text-error mb-2">OUT OF MOVES</h2>
+                <p class="text-sm text-on-surface-variant mb-8">You ran out of moves on this Par Challenge!</p>
                 
-                <div style="display: flex; flex-direction: column; gap: 16px; text-align: left; margin-bottom: 24px;">
-                    <div style="display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid #2a2a2a;">
-                        <span style="font-weight: 500;">Theme Mode:</span>
-                        <button id="btn-settings-theme" class="theme-btn" style="margin: 0;">
-                            <span id="settings-theme-icon">🌙</span>
-                            <span id="settings-theme-text">Dark Mode</span>
-                        </button>
-                    </div>
-                    <div style="display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid #2a2a2a;">
-                        <span style="font-weight: 500;">Sound Effects:</span>
-                        <button id="btn-settings-sound" class="theme-btn" style="margin: 0; min-width: 120px;">
-                            <span id="settings-sound-icon">🔊</span>
-                            <span id="settings-sound-text">Sound ON</span>
-                        </button>
-                    </div>
-                    <div style="display: flex; justify-content: space-between; align-items: center; padding: 10px 0;">
-                        <span style="font-weight: 500; color: #ff3b30;">Reset Data:</span>
-                        <button id="btn-settings-clear" class="play-again-btn" style="background: #ff3b30; font-size: 12px; padding: 6px 12px; width: auto; margin: 0;">Clear Progress</button>
-                    </div>
+                <div class="flex flex-col w-full gap-3">
+                    <button id="btn-gameover-retry" class="w-full py-3.5 bg-primary text-on-primary font-bold rounded-xl active:scale-95 transition-transform hover:brightness-110 shadow-md">
+                        Try Again
+                    </button>
+                    <button id="btn-gameover-menu" class="w-full py-3.5 border border-white/20 rounded-xl text-on-surface font-semibold hover:bg-white/5 active:scale-95 transition-all">
+                        Back to Menu
+                    </button>
                 </div>
-                
-                <button id="btn-settings-close" class="play-again-btn secondary-btn" style="margin-top: 0;">Back to Menu</button>
             </div>
         </div>
+
+        <!-- ==================== 9. VICTORY OVERLAY ==================== -->
+        <div id="win-overlay" class="fixed inset-0 z-50 flex items-center justify-center bg-black/85 backdrop-blur-sm px-container-padding hidden">
+            <!-- Particle Effects Container -->
+            <div id="particles" class="absolute inset-0 pointer-events-none overflow-hidden">
+                <!-- Particles injected via JS -->
+            </div>
+            <!-- Glassmorphic Modal -->
+            <div class="glass-panel w-full max-w-md rounded-2xl p-8 flex flex-col items-center text-center border_glass relative z-10 shadow-2xl">
+                <!-- Icon/Graphic -->
+                <div class="w-20 h-20 mb-6 rounded-full bg-surface-container flex items-center justify-center border border-white/10 shadow-[0_0_30px_rgba(255,215,0,0.2)]">
+                    <span class="material-symbols-outlined text-4xl text-[#FFD700]" style="font-variation-settings: 'FILL' 1;">
+                        trophy
+                    </span>
+                </div>
+                <!-- Headline -->
+                <h1 class="font-display-lg text-display-lg text-[#FFD700] glow-text mb-1">YOU WIN!</h1>
+                <p id="win-message" class="font-body-lg text-body-lg text-on-surface-variant mb-8">Amazing! You sorted all colors perfectly.</p>
+                <!-- Action Buttons -->
+                <div class="flex flex-col w-full gap-3">
+                    <button id="btn-win-retry-same" class="w-full py-3.5 rounded-xl border border-white/20 text-on-surface font-headline-md-mobile text-headline-md-mobile hover:bg-surface-container-high transition-colors flex items-center justify-center gap-2">
+                        Replay Level
+                    </button>
+                    <button id="btn-win-replay" class="w-full py-4 rounded-xl bg-tertiary text-on-tertiary-fixed neon-button font-headline-md-mobile text-headline-md-mobile flex items-center justify-center gap-2 font-bold text-black">
+                        <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">play_arrow</span>
+                        Play Next Level
+                    </button>
+                    <button id="btn-win-menu" class="w-full py-3.5 rounded-xl border border-outline text-on-surface font-headline-md-mobile text-headline-md-mobile hover:bg-surface-container-high transition-colors flex items-center justify-center gap-2">
+                        <span class="material-symbols-outlined">menu</span>
+                        Back to Menu
+                    </button>
+                </div>
+            </div>
+        </div>
+
     </div>
-    
+
+    <!-- Script Injection -->
     <script src="app.js?v=18"></script>
+    <script>
+        // Win overlay particle generation script
+        document.addEventListener('DOMContentLoaded', () => {
+            const container = document.getElementById('particles');
+            const colors = ['#ffbfd7', '#d2bbff', '#7de0e8', '#FFD700'];
+            
+            for (let i = 0; i < 35; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.left = `${Math.random() * 100}%`;
+                particle.style.bottom = '-10%';
+                
+                const size = Math.random() * 12 + 4;
+                particle.style.width = `${size}px`;
+                particle.style.height = `${size}px`;
+                particle.style.background = colors[Math.floor(Math.random() * colors.length)];
+                particle.style.animationDelay = `${Math.random() * 2}s`;
+                particle.style.animationDuration = `${Math.random() * 2 + 1.8}s`;
+                
+                if (Math.random() > 0.5) {
+                    particle.style.filter = 'blur(1.5px)';
+                }
+                container.appendChild(particle);
+            }
+        });
+    </script>
 </body>
 </html>

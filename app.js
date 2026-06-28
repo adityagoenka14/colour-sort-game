@@ -391,63 +391,83 @@ function generateChallengeMode(mode) {
 function renderBoard() {
     boardEl.innerHTML = '';
     
-    // Set appropriate columns class on board for responsive resizing
-    boardEl.className = `cols-${tubes.length}`;
+    // Set appropriate classes on board for flex positioning
+    boardEl.className = 'flex flex-row justify-center items-end gap-2 sm:gap-3 md:gap-4 w-full h-[360px] sm:h-[400px] md:h-[440px] px-2 select-none';
     
+    // Dynamically calculate responsive tube width based on count to fit on screen
+    const availableWidth = boardEl.clientWidth || window.innerWidth;
+    const padding = 32; // padding px
+    const gap = 12; // gap size average
+    const maxTubes = tubes.length;
+    const computedWidth = Math.min(64, Math.floor((availableWidth - padding - (maxTubes - 1) * gap) / maxTubes));
+    const tubeWidthStr = `${Math.max(34, computedWidth)}px`;
+
     tubes.forEach((tube, tubeIndex) => {
-        const container = document.createElement('div');
-        container.className = 'tube-container';
-        
-        // Locked tube styling for Locked Tubes mode
         const isLocked = isTubeLocked(tubeIndex);
-        if (isLocked) {
-            container.classList.add('locked-container');
-        }
-        
-        container.onclick = () => {
-            if (!isLocked) handleTubeClick(tubeIndex);
-        };
         
         const tubeDiv = document.createElement('div');
-        tubeDiv.className = 'tube';
+        tubeDiv.className = 'glass-tube rounded-t-full rounded-b-xl flex flex-col justify-end p-1.5 pb-3 h-full relative cursor-pointer';
+        tubeDiv.style.width = tubeWidthStr;
         
-        // Squeeze mode visual indicator
-        if (gameMode === 'challenge-squeeze' && tubeIndex === 5) {
-            tubeDiv.classList.add('capacity-3');
+        // Selected tube animation
+        if (tubeIndex === selectedTube) {
+            tubeDiv.classList.add('tube-selected');
+            const beam = document.createElement('div');
+            beam.className = 'light-beam';
+            tubeDiv.appendChild(beam);
         }
-        
-        // Classic mode 3-color capacity 6 visual indicator
-        if (gameMode === 'classic' && colorsCount === 3) {
-            tubeDiv.classList.add('capacity-6');
-        }
-        
+
+        // Locked tube styling / overlay
         if (isLocked) {
-            tubeDiv.classList.add('locked');
+            tubeDiv.classList.add('opacity-60');
+            const lockDiv = document.createElement('div');
+            lockDiv.className = 'locked-tube-lock';
+            lockDiv.innerHTML = '<span class="material-symbols-outlined text-secondary text-lg" style="font-variation-settings: \'FILL\' 1;">lock</span>';
+            tubeDiv.appendChild(lockDiv);
+        } else {
+            tubeDiv.onclick = () => handleTubeClick(tubeIndex);
+        }
+        
+        // Squeeze mode visual indicator (shorter height)
+        const cap = getTubeCapacity(tubeIndex);
+        if (cap === 3) {
+            tubeDiv.style.height = '40%';
+            tubeDiv.classList.add('border-dotted', 'border-secondary/40');
+        } else if (cap === 6) {
+            tubeDiv.style.height = '65%';
+        } else {
+            tubeDiv.style.height = '100%';
         }
         
         // Render balls bottom to top
         tube.forEach((color, ballIndex) => {
             const ball = document.createElement('div');
-            
-            // Check Mystery Sort Mode
             const isMystery = gameMode === 'challenge-mystery' && ballIndex !== tube.length - 1;
             
             if (isMystery) {
-                ball.className = 'ball mystery';
+                ball.className = 'sphere sphere-mystery';
             } else {
-                ball.className = `ball color-${color}`;
+                ball.className = `sphere sphere-${color}`;
             }
             
-            // Selection bounce animation
+            // Render highlight inside
+            const highlight = document.createElement('div');
+            highlight.className = 'absolute inset-0 sphere-highlight rounded-full mix-blend-screen';
+            ball.appendChild(highlight);
+            
+            const shadow = document.createElement('div');
+            shadow.className = 'absolute inset-0 sphere-shadow rounded-full';
+            ball.appendChild(shadow);
+            
+            // Selection bounce / glow animation
             if (tubeIndex === selectedTube && ballIndex === tube.length - 1) {
-                ball.classList.add('selected');
+                ball.classList.add('sphere-selected-glow', 'animate-pulse');
             }
             
             tubeDiv.appendChild(ball);
         });
         
-        container.appendChild(tubeDiv);
-        boardEl.appendChild(container);
+        boardEl.appendChild(tubeDiv);
     });
 }
 
@@ -800,7 +820,8 @@ function handleCheckout() {
     // Unlock color buttons in Menu
     const premiumBtns = document.querySelectorAll('.premium-lock');
     premiumBtns.forEach(btn => {
-        btn.classList.remove('premium-lock');
+        btn.classList.remove('premium-lock', 'text-on-surface-variant/50', 'border-white/5');
+        btn.classList.add('border-white/10', 'hover:border-primary/50', 'hover:bg-white/5');
         btn.innerHTML = btn.dataset.colors;
     });
     
@@ -821,8 +842,12 @@ colorBtns.forEach(btn => {
         }
         
         // Set active button
-        colorBtns.forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
+        colorBtns.forEach(b => {
+            b.classList.remove('active', 'border-primary', 'bg-primary/20', 'text-primary');
+            b.classList.add('border-white/10');
+        });
+        btn.classList.add('active', 'border-primary', 'bg-primary/20', 'text-primary');
+        btn.classList.remove('border-white/10');
         
         gameMode = 'classic';
         colorsCount = num;
@@ -954,6 +979,16 @@ document.getElementById('btn-undo').addEventListener('click', undoMove);
 document.getElementById('btn-hint').addEventListener('click', showHint);
 document.getElementById('btn-reset').addEventListener('click', handleReset);
 
+// Navigation controls mapping (mobile footer buttons)
+const btnHomeNav = document.getElementById('btn-home-nav');
+if (btnHomeNav) btnHomeNav.addEventListener('click', showMainMenu);
+
+const btnUndoNav = document.getElementById('btn-undo-nav');
+if (btnUndoNav) btnUndoNav.addEventListener('click', undoMove);
+
+const btnMenuClose = document.getElementById('btn-menu-close');
+if (btnMenuClose) btnMenuClose.addEventListener('click', () => hideOverlay(menuOverlay));
+
 // Paywall actions
 document.getElementById('btn-paywall-close').addEventListener('click', () => {
     hideOverlay(paywallOverlay);
@@ -988,7 +1023,6 @@ document.getElementById('btn-home-play').addEventListener('click', () => {
 });
 document.getElementById('btn-home-challenges').addEventListener('click', () => {
     showOverlay(menuOverlay);
-    // Focus/scroll challenges in menu if needed, opening modal is the primary action
 });
 document.getElementById('btn-home-settings').addEventListener('click', () => {
     showOverlay(settingsOverlay);
@@ -1003,51 +1037,46 @@ document.getElementById('btn-settings-close').addEventListener('click', () => {
 });
 
 function toggleTheme() {
-    document.body.classList.toggle('light-theme');
-    const isLight = document.body.classList.contains('light-theme');
-    localStorage.setItem('theme', isLight ? 'light' : 'dark');
+    const checkbox = document.getElementById('btn-settings-theme');
+    const isLight = checkbox ? checkbox.checked : document.body.classList.contains('light-theme');
+    if (isLight) {
+        document.body.classList.add('light-theme');
+        localStorage.setItem('theme', 'light');
+    } else {
+        document.body.classList.remove('light-theme');
+        localStorage.setItem('theme', 'dark');
+    }
     updateThemeUI();
 }
 
 function updateThemeUI() {
     const isLight = document.body.classList.contains('light-theme');
-    
-    // Select Mode Theme toggler
-    const menuThemeIcon = document.getElementById('theme-btn-icon');
-    const menuThemeText = document.getElementById('theme-btn-text');
-    if (menuThemeIcon && menuThemeText) {
-        menuThemeIcon.textContent = isLight ? '☀️' : '🌙';
-        menuThemeText.textContent = isLight ? 'Light Mode' : 'Dark Mode';
-    }
-    
-    // Settings Screen Theme toggler
-    const settingsThemeIcon = document.getElementById('settings-theme-icon');
-    const settingsThemeText = document.getElementById('settings-theme-text');
-    if (settingsThemeIcon && settingsThemeText) {
-        settingsThemeIcon.textContent = isLight ? '☀️' : '🌙';
-        settingsThemeText.textContent = isLight ? 'Light Mode' : 'Dark Mode';
+    const checkbox = document.getElementById('btn-settings-theme');
+    if (checkbox) {
+        checkbox.checked = isLight;
     }
 }
 
-document.getElementById('btn-theme-toggle').addEventListener('click', toggleTheme);
-document.getElementById('btn-settings-theme').addEventListener('click', toggleTheme);
+const themeToggleEl = document.getElementById('btn-settings-theme');
+if (themeToggleEl) themeToggleEl.addEventListener('change', toggleTheme);
 
 // Sound toggling
 function toggleSound() {
-    sounds.toggle(!sounds.enabled);
+    const checkbox = document.getElementById('btn-settings-sound');
+    const enabled = checkbox ? checkbox.checked : !sounds.enabled;
+    sounds.toggle(enabled);
     updateSoundUI();
 }
 
 function updateSoundUI() {
-    const icon = document.getElementById('settings-sound-icon');
-    const text = document.getElementById('settings-sound-text');
-    if (icon && text) {
-        icon.textContent = sounds.enabled ? '🔊' : '🔇';
-        text.textContent = sounds.enabled ? 'Sound ON' : 'Sound OFF';
+    const checkbox = document.getElementById('btn-settings-sound');
+    if (checkbox) {
+        checkbox.checked = sounds.enabled;
     }
 }
 
-document.getElementById('btn-settings-sound').addEventListener('click', toggleSound);
+const soundToggleEl = document.getElementById('btn-settings-sound');
+if (soundToggleEl) soundToggleEl.addEventListener('change', toggleSound);
 
 // Clear data setting
 document.getElementById('btn-settings-clear').addEventListener('click', () => {
