@@ -21,15 +21,18 @@
         }
 
         .glass-panel {
-            background: rgba(255, 255, 255, 0.08);
+            background: var(--color-surface-container-high);
             backdrop-filter: blur(16px);
             -webkit-backdrop-filter: blur(16px);
-            border: 1.5px solid rgba(255, 255, 255, 0.12);
-            border-radius: 1.5rem; /* rounded-3xl MD3 style */
+            border: 1.5px solid var(--color-outline-variant);
+            border-radius: 1.5rem;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.24);
+            transition: background-color 0.3s ease, border-color 0.3s ease;
         }
         body.light-theme .glass-panel {
-            background: rgba(0, 0, 0, 0.04);
-            border: 1.5px solid rgba(0, 0, 0, 0.08);
+            background: var(--color-surface-container-high);
+            border: 1.5px solid var(--color-outline-variant);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
         }
 
         /* Tactile button scales */
@@ -269,6 +272,10 @@
         }
         body.light-theme .overlay {
             background-color: rgba(250, 248, 249, 0.85);
+        }
+        body.light-theme #win-overlay h1 {
+            color: #B58420;
+            text-shadow: none;
         }
 
         /* Locked tubes indicator */
@@ -668,7 +675,7 @@
         </div>
 
         <!-- ==================== 9. VICTORY OVERLAY ==================== -->
-        <div id="win-overlay" class="fixed inset-0 z-50 flex items-center justify-center bg-black/85 backdrop-blur-sm px-container-padding hidden">
+        <div id="win-overlay" class="overlay hidden">
             <!-- Particle Effects Container -->
             <div id="particles" class="absolute inset-0 pointer-events-none overflow-hidden">
                 <!-- Particles injected via JS -->
@@ -676,24 +683,27 @@
             <!-- Glassmorphic Modal -->
             <div class="glass-panel w-full max-w-md rounded-2xl p-8 flex flex-col items-center text-center border_glass relative z-10 shadow-2xl">
                 <!-- Icon/Graphic -->
-                <div class="w-20 h-20 mb-6 rounded-full bg-surface-container flex items-center justify-center border border-white/10 shadow-[0_0_30px_rgba(255,215,0,0.2)]">
-                    <svg class="w-10 h-10 text-[#FFD700]" fill="currentColor" viewBox="0 0 24 24"><path d="M19 5h-2V3H7v2H5c-1.1 0-2 .9-2 2v3c0 2.44 1.72 4.48 4 4.9V18c0 .55.45 1 1 1h2v2h4v-2h2c.55 0 1-.45 1-1v-3.1c2.28-.42 4-2.46 4-4.9V7c0-1.1-.9-2-2-2zM5 10V7h2v3H5zm14 0h-2V7h2v3z"/></svg>
+                <div class="w-20 h-20 mb-6 rounded-full bg-surface-container flex items-center justify-center border border-outline/15 shadow-[0_0_30px_rgba(255,215,0,0.15)]">
+                    <svg class="w-10 h-10 text-[#FFD700] filter drop-shadow-[0_2px_4px_rgba(0,0,0,0.25)]" fill="currentColor" viewBox="0 0 24 24"><path d="M19 5h-2V3H7v2H5c-1.1 0-2 .9-2 2v3c0 2.44 1.72 4.48 4 4.9V18c0 .55.45 1 1 1h2v2h4v-2h2c.55 0 1-.45 1-1v-3.1c2.28-.42 4-2.46 4-4.9V7c0-1.1-.9-2-2-2zM5 10V7h2v3H5zm14 0h-2V7h2v3z"/></svg>
                 </div>
                 <!-- Headline -->
-                <h1 class="font-display-lg text-display-lg text-[#FFD700] glow-text mb-1">YOU WIN!</h1>
+                <h1 class="font-display-lg text-display-lg text-[#FFD700] glow-text mb-1 uppercase tracking-wider">YOU WIN!</h1>
                 <p id="win-message" class="font-body-lg text-body-lg text-on-surface-variant mb-8">Amazing! You sorted all colors perfectly.</p>
                 <!-- Action Buttons -->
                 <div class="flex flex-col w-full gap-3">
-                    <button id="btn-win-retry-same" class="w-full py-3.5 rounded-xl border border-white/20 text-on-surface font-headline-md-mobile text-headline-md-mobile hover:bg-surface-container-high transition-colors flex items-center justify-between px-6 gap-2">
-                        <span>Replay Level</span>
-                        <div class="w-4 h-4"></div>
-                    </button>
-                    <button id="btn-win-replay" class="w-full py-4 rounded-xl bg-tertiary text-on-tertiary-fixed neon-button font-headline-md-mobile text-headline-md-mobile flex items-center justify-center gap-2 font-bold text-black">
-                        <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                    <!-- Play Next Level (Primary Filled Call-to-action) -->
+                    <button id="btn-win-replay" class="w-full h-[54px] rounded-full bg-primary text-on-primary font-bold tracking-wider flex items-center justify-center gap-2 shadow-md hover:brightness-105 active:scale-95 transition-all">
+                        <svg class="w-5 h-5 fill-current" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
                         Play Next Level
                     </button>
-                    <button id="btn-win-menu" class="w-full py-3.5 rounded-xl border border-outline text-on-surface font-headline-md-mobile text-headline-md-mobile hover:bg-surface-container-high transition-colors flex items-center justify-center gap-2">
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"/></svg>
+                    <!-- Replay Same Level (Outline) -->
+                    <button id="btn-win-retry-same" class="w-full h-[50px] rounded-full border border-outline text-on-surface font-semibold flex items-center justify-center gap-2 hover:bg-white/5 active:scale-95 transition-all">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 4v5h.582m15.356 2a8 8 0 11-1.616-4.973M12 8v4l3 3"/></svg>
+                        Replay Level
+                    </button>
+                    <!-- Back to Menu (Tonal Secondary) -->
+                    <button id="btn-win-menu" class="w-full h-[50px] rounded-full bg-secondary-container text-on-secondary-container font-semibold flex items-center justify-center gap-2 hover:brightness-105 active:scale-95 transition-all">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"/></svg>
                         Back to Menu
                     </button>
                 </div>
