@@ -396,6 +396,7 @@ function renderBoard() {
     
     // Dynamically calculate responsive tube width based on count to fit on screen
     const availableWidth = boardEl.clientWidth || window.innerWidth;
+    const boardHeight = boardEl.clientHeight || 400;
     const padding = 32; // padding px
     const gap = 12; // gap size average
     const maxTubes = tubes.length;
@@ -404,9 +405,11 @@ function renderBoard() {
 
     tubes.forEach((tube, tubeIndex) => {
         const isLocked = isTubeLocked(tubeIndex);
+        const cap = getTubeCapacity(tubeIndex);
         
         const tubeDiv = document.createElement('div');
-        tubeDiv.className = 'glass-tube rounded-t-full rounded-b-xl flex flex-col justify-end p-1.5 pb-3 h-full relative cursor-pointer';
+        // Test tubes are rounded-b-full and open at the top.
+        tubeDiv.className = 'glass-tube rounded-b-full rounded-t-none flex flex-col-reverse justify-start items-center p-1.5 pb-4 relative cursor-pointer';
         tubeDiv.style.width = tubeWidthStr;
         
         // Selected tube animation
@@ -428,17 +431,26 @@ function renderBoard() {
             tubeDiv.onclick = () => handleTubeClick(tubeIndex);
         }
         
-        // Squeeze mode visual indicator (shorter height)
-        const cap = getTubeCapacity(tubeIndex);
+        // Calculate tube heights and responsive ball size dynamically to guarantee they fit in the tube
+        let tubeHeight = boardHeight;
         if (cap === 3) {
-            tubeDiv.style.height = '40%';
+            tubeHeight = Math.floor(boardHeight * 0.45);
+            tubeDiv.style.height = `${tubeHeight}px`;
             tubeDiv.classList.add('border-dotted', 'border-secondary/40');
         } else if (cap === 6) {
-            tubeDiv.style.height = '65%';
+            tubeHeight = Math.floor(boardHeight * 0.68);
+            tubeDiv.style.height = `${tubeHeight}px`;
         } else {
-            tubeDiv.style.height = '100%';
+            tubeHeight = Math.floor(boardHeight * 0.90);
+            tubeDiv.style.height = `${tubeHeight}px`;
         }
         
+        // Calculate max ball size based on capacity and tube height
+        const maxBallSize = Math.floor((tubeHeight - 20 - (cap - 1) * 2) / cap);
+        const tubeWidth = Math.max(34, computedWidth);
+        const ballSize = Math.min(tubeWidth - 8, maxBallSize);
+        const ballSizeStr = `${ballSize}px`;
+
         // Render balls bottom to top
         tube.forEach((color, ballIndex) => {
             const ball = document.createElement('div');
@@ -449,6 +461,11 @@ function renderBoard() {
             } else {
                 ball.className = `sphere sphere-${color}`;
             }
+            
+            // Set dynamic size to prevent overflow
+            ball.style.width = ballSizeStr;
+            ball.style.height = ballSizeStr;
+            ball.style.margin = '1px auto';
             
             // Render highlight inside
             const highlight = document.createElement('div');
