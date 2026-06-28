@@ -82,12 +82,14 @@
             box-shadow: inset 0 0 12px rgba(255, 255, 255, 0.12), inset -4px -4px 10px rgba(0, 0, 0, 0.25), 0 8px 24px rgba(0, 0, 0, 0.15);
             transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
             position: relative;
+            padding-bottom: 12px; /* align bottom ball above bottom curve */
         }
         body.light-theme .glass-tube {
             background: linear-gradient(180deg, rgba(0, 0, 0, 0.03) 0%, rgba(0, 0, 0, 0.07) 100%);
             border: 2px solid rgba(0, 0, 0, 0.25);
             border-top: none;
             box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.04), inset -3px -3px 8px rgba(0, 0, 0, 0.08), 0 6px 18px rgba(0, 0, 0, 0.06);
+            padding-bottom: 12px;
         }
 
         .tube-selected {
@@ -124,6 +126,31 @@
             border: 2px solid rgba(0, 0, 0, 0.25);
         }
 
+        /* Realistic tube lid/stopper for solved tubes */
+        .tube-lid {
+            position: absolute;
+            top: -9px; /* snap onto the rim */
+            left: 50%;
+            transform: translateX(-50%);
+            width: calc(100% + 4px);
+            height: 12px;
+            background: linear-gradient(90deg, #444 0%, #777 50%, #444 100%);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 4px 4px 2px 2px;
+            box-shadow: 0 3px 5px rgba(0, 0, 0, 0.35), inset 0 1px 1px rgba(255, 255, 255, 0.2);
+            z-index: 15;
+            animation: lid-drop 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.2) forwards;
+        }
+        body.light-theme .tube-lid {
+            background: linear-gradient(90deg, #777 0%, #ccc 50%, #777 100%);
+            border: 1.5px solid rgba(0, 0, 0, 0.2);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15), inset 0 1px 1px rgba(255, 255, 255, 0.4);
+        }
+        @keyframes lid-drop {
+            0% { transform: translate(-50%, -20px); opacity: 0; }
+            100% { transform: translate(-50%, 0); opacity: 1; }
+        }
+
         .light-beam {
             position: absolute;
             bottom: 0;
@@ -142,11 +169,11 @@
             opacity: 1;
         }
 
-        /* 3D Sphere Styles for 12 colors - M3 Pastel Scheme */
+        /* 3D Sphere Styles for 12 colors - Vibrant High-Contrast Scheme */
         .sphere {
             border-radius: 50%;
             position: relative;
-            box-shadow: inset -4px -4px 10px rgba(0,0,0,0.45), inset 4px 4px 10px rgba(255,255,255,0.45);
+            box-shadow: inset -2px -2px 6px rgba(0,0,0,0.15), inset 2px 2px 6px rgba(255,255,255,0.25);
             margin-bottom: 2px;
             width: 100%;
             aspect-ratio: 1/1;
@@ -156,24 +183,24 @@
             box-shadow: 0 0 15px var(--color-primary), inset -4px -4px 10px rgba(0,0,0,0.45), inset 4px 4px 10px rgba(255,255,255,0.45);
         }
 
-        /* Harmonious M3 Pastel gradients */
-        .sphere-B { background: radial-gradient(circle at 30% 30%, #C1E8FF, #4893E6); } /* Sky Blue */
-        .sphere-G { background: radial-gradient(circle at 30% 30%, #C9F2C9, #4EB878); } /* Mint Green */
-        .sphere-V { background: radial-gradient(circle at 30% 30%, #E9D8FD, #996CE6); } /* Lavender Violet */
-        .sphere-R { background: radial-gradient(circle at 30% 30%, #FED7D7, #E3646B); } /* Pastel Rose/Red */
-        .sphere-C { background: radial-gradient(circle at 30% 30%, #E0F7FA, #43C5D6); } /* Soft Cyan */
-        .sphere-M { background: radial-gradient(circle at 30% 30%, #FFE3EC, #D95280); } /* Blossom Pink */
-        .sphere-T { background: radial-gradient(circle at 30% 30%, #E6FFFA, #48A89C); } /* Pastel Teal */
-        .sphere-Y { background: radial-gradient(circle at 30% 30%, #FEF9C3, #E6B522); } /* Pastel Yellow */
-        .sphere-O { background: radial-gradient(circle at 30% 30%, #FFE0B2, #E67A15); } /* Pastel Orange */
-        .sphere-P { background: radial-gradient(circle at 30% 30%, #F3E5F5, #9C3BB0); } /* Pastel Purple */
-        .sphere-BR { background: radial-gradient(circle at 30% 30%, #FFECB3, #C48E27); } /* Soft Gold/Amber */
-        .sphere-W { background: radial-gradient(circle at 30% 30%, #F8FAFC, #94A3B8); } /* Soft Alabaster White */
+        /* Vibrant high-contrast Google-themed color gradients */
+        .sphere-B { background: radial-gradient(circle at 30% 30%, #C6ECFF, #1A73E8); } /* Sky Blue */
+        .sphere-G { background: radial-gradient(circle at 30% 30%, #D2F7D2, #34A853); } /* Mint Green */
+        .sphere-V { background: radial-gradient(circle at 30% 30%, #F5D3FF, #A020F0); } /* Violet Purple */
+        .sphere-R { background: radial-gradient(circle at 30% 30%, #FFD6D6, #EA4335); } /* Pastel Rose/Red */
+        .sphere-C { background: radial-gradient(circle at 30% 30%, #D4FCFF, #00C5CD); } /* Soft Cyan */
+        .sphere-M { background: radial-gradient(circle at 30% 30%, #FFDDF0, #FF1493); } /* Hot Pink */
+        .sphere-T { background: radial-gradient(circle at 30% 30%, #B2FAF1, #008080); } /* Deep Teal */
+        .sphere-Y { background: radial-gradient(circle at 30% 30%, #FFF4C2, #FBBC05); } /* Golden Yellow */
+        .sphere-O { background: radial-gradient(circle at 30% 30%, #FFE5C4, #FF8C00); } /* Vibrant Orange */
+        .sphere-P { background: radial-gradient(circle at 30% 30%, #E0E3FF, #4B0082); } /* Indigo Purple */
+        .sphere-BR { background: radial-gradient(circle at 30% 30%, #FFF3D6, #FFBF00); } /* Golden Amber */
+        .sphere-W { background: radial-gradient(circle at 30% 30%, #F8FAFC, #94A3B8); } /* Alabaster White */
         
         .sphere-mystery { background: radial-gradient(circle at 30% 30%, #E2E8F0, #475569); } /* Slate Mystery */
 
         .sphere-highlight { background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.7) 0%, transparent 60%); }
-        .sphere-shadow { box-shadow: inset -6px -6px 15px rgba(0, 0, 0, 0.55); }
+        .sphere-shadow { box-shadow: inset -4px -4px 10px rgba(0, 0, 0, 0.2); }
 
         @keyframes settle {
             0% { transform: translateY(-150px); opacity: 0; }

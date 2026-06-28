@@ -464,8 +464,8 @@ function renderBoard() {
             tubeDiv.style.height = `${tubeHeight}px`;
         }
         
-        // Calculate max ball size based on capacity and tube height
-        const maxBallSize = Math.floor((tubeHeight - 20 - (cap - 1) * 2) / cap);
+        // Calculate max ball size based on capacity and tube height (accounting for 12px bottom padding + 16px lid space)
+        const maxBallSize = Math.floor((tubeHeight - 28 - cap * 2) / cap);
         const tubeWidth = Math.max(34, computedWidth);
         const ballSize = Math.min(tubeWidth - 8, maxBallSize);
         const ballSizeStr = `${ballSize}px`;
@@ -513,6 +513,20 @@ function renderBoard() {
             
             tubeDiv.appendChild(ball);
         });
+        
+        // Render lid/stopper if the tube is completed/solved
+        const isSolved = tube.length === cap && tube.every(val => val === tube[0]);
+        if (isSolved) {
+            const lid = document.createElement('div');
+            lid.className = 'tube-lid';
+            tubeDiv.appendChild(lid);
+            // Disable selections on solved tubes
+            tubeDiv.onclick = null;
+            tubeDiv.ontouchstart = null;
+            tubeDiv.onmousedown = null;
+            tubeDiv.classList.add('cursor-default');
+            tubeDiv.classList.remove('cursor-pointer');
+        }
         
         boardEl.appendChild(tubeDiv);
     });
