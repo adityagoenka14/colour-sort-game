@@ -17,6 +17,8 @@ let colorsCount = 5;
 let isPremiumUnlocked = false;
 let isLockedTubeUnlocked = false;
 
+let lastMoveForAnimation = null;
+
 // Challenge specifics
 let undoStack = [];
 let solutionPath = [];
@@ -411,6 +413,7 @@ function renderBoard() {
         // Test tubes are rounded-b-full and open at the top.
         tubeDiv.className = 'glass-tube rounded-b-full rounded-t-none flex flex-col-reverse justify-start items-center p-1.5 pb-4 relative cursor-pointer';
         tubeDiv.style.width = tubeWidthStr;
+        tubeDiv.dataset.index = tubeIndex;
         
         // Selected tube animation
         if (tubeIndex === selectedTube) {
@@ -425,10 +428,20 @@ function renderBoard() {
             tubeDiv.classList.add('opacity-60');
             const lockDiv = document.createElement('div');
             lockDiv.className = 'locked-tube-lock';
-            lockDiv.innerHTML = '<span class="material-symbols-outlined text-secondary text-lg" style="font-variation-settings: \'FILL\' 1;">lock</span>';
+            lockDiv.innerHTML = '<svg class="w-5 h-5 text-secondary" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>';
             tubeDiv.appendChild(lockDiv);
         } else {
+            // Click fallback
             tubeDiv.onclick = () => handleTubeClick(tubeIndex);
+            
+            // Touch/Mouse down drag start
+            tubeDiv.ontouchstart = (e) => {
+                e.preventDefault();
+                handleTubeClick(tubeIndex);
+            };
+            tubeDiv.onmousedown = (e) => {
+                handleTubeClick(tubeIndex);
+            };
         }
         
         // Calculate tube heights and responsive ball size dynamically to guarantee they fit in the tube
@@ -481,11 +494,19 @@ function renderBoard() {
                 ball.classList.add('sphere-selected-glow', 'animate-pulse');
             }
             
+            // Settle gravity slide down animation
+            if (lastMoveForAnimation && tubeIndex === lastMoveForAnimation.tubeIndex && ballIndex === lastMoveForAnimation.ballIndex) {
+                ball.classList.add('sphere-animate-fall');
+            }
+            
             tubeDiv.appendChild(ball);
         });
         
         boardEl.appendChild(tubeDiv);
     });
+    
+    // Clear animation state after rendering
+    lastMoveForAnimation = null;
 }
 
 function isTubeLocked(index) {
@@ -553,6 +574,9 @@ function executeMove(src, tgt) {
     selectedTube = null;
     movesMade++;
     
+    // Set animation state for gravity fall
+    lastMoveForAnimation = { tubeIndex: tgt, ballIndex: tubes[tgt].length - 1 };
+    
     // Check if a tube unlocks in Locked Tubes mode
     let unlockedThisTurn = false;
     if (gameMode === 'challenge-locked' && !isLockedTubeUnlocked) {
@@ -600,6 +624,9 @@ function undoMove() {
     tubes[last.src].push(ball);
     selectedTube = null;
     movesMade--;
+    
+    // Set animation state for undo gravity fall
+    lastMoveForAnimation = { tubeIndex: last.src, ballIndex: tubes[last.src].length - 1 };
     
     if (last.unlockedThisTurn) {
         isLockedTubeUnlocked = false;
@@ -1179,3 +1206,44 @@ setTimeout(() => {
         showScreen('home-screen');
     }
 }, 2500);
+
+// Helper to get tube index from screen coordinates
+function getTubeIndexFromPoint(x, y) {
+    const el = document.elementFromPoint(x, y);
+    if (!el) return null;
+    const tubeEl = el.closest('.glass-tube');
+    if (!tubeEl) return null;
+    return parseInt(tubeEl.dataset.index);
+}
+
+// Global release handlers for touch/swipe support
+window.addEventListener('touchend', (e) => {
+    if (selectedTube !== null) {
+        const touch = e.changedTouches[0];
+        const tgtIndex = getTubeIndexFromPoint(touch.clientX, touch.clientY);
+        if (tgtIndex !== null && tgtIndex !== selectedTube) {
+            if (isValidMove(selectedTube, tgtIndex)) {
+                executeMove(selectedTube, tgtIndex);
+            } else {
+                selectedTube = null;
+                sounds.playError();
+                renderBoard();
+            }
+        }
+    }
+});
+
+window.addEventListener('mouseup', (e) => {
+    if (selectedTube !== null) {
+        const tgtIndex = getTubeIndexFromPoint(e.clientX, e.clientY);
+        if (tgtIndex !== null && tgtIndex !== selectedTube) {
+            if (isValidMove(selectedTube, tgtIndex)) {
+                executeMove(selectedTube, tgtIndex);
+            } else {
+                selectedTube = null;
+                sounds.playError();
+                renderBoard();
+            }
+        }
+    }
+});

@@ -4,8 +4,7 @@
     <meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
     <title>Colour Sort - Deluxe</title>
-    <!-- Material Symbols -->
-    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+    <!-- Inline SVGs are used instead of Material Symbols to support offline rendering -->
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com" rel="preconnect"/>
     <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
@@ -132,6 +131,28 @@
         .neon-button {
             box-shadow: 0 0 20px rgba(125, 224, 232, 0.3);
             transition: all 0.3s ease;
+        }
+        
+        @keyframes fall-down {
+            0% {
+                transform: translateY(-250px);
+                animation-timing-function: cubic-bezier(0.55, 0.055, 0.675, 0.19);
+            }
+            85% {
+                transform: translateY(6px);
+                animation-timing-function: cubic-bezier(0.215, 0.610, 0.355, 1);
+            }
+            95% {
+                transform: translateY(-3px);
+                animation-timing-function: ease-in-out;
+            }
+            100% {
+                transform: translateY(0);
+            }
+        }
+        .sphere-animate-fall {
+            animation: fall-down 0.42s forwards;
+            will-change: transform;
         }
         .neon-button:hover {
             box-shadow: 0 0 30px rgba(125, 224, 232, 0.5);
@@ -267,7 +288,7 @@
                 </button>
                 <!-- Promotional Action -->
                 <button id="btn-home-premium" class="w-full h-[56px] rounded-xl glass-panel text-secondary border border-secondary/40 font-headline-md-mobile text-headline-md-mobile flex items-center justify-center transition-all duration-300 active:scale-95 hover:bg-secondary/10 pulse-glow mt-4">
-                    <span class="material-symbols-outlined mr-2" style="font-variation-settings: 'FILL' 1;">workspace_premium</span>
+                    <svg class="w-6 h-6 mr-2 text-[#FFD700]" fill="currentColor" viewBox="0 0 24 24"><path d="M2 4l3 7 7-9 7 9 3-7-1 18H3L2 4z"/></svg>
                     UNLOCK DELUXE
                 </button>
             </div>
@@ -278,7 +299,7 @@
             <!-- Top App Bar -->
             <header class="w-full z-50 flex items-center justify-between px-game-column-gap pt-10 pb-4 bg-background/40 backdrop-blur-md border-b border-white/10 shrink-0">
                 <button id="btn-menu" class="text-primary hover:opacity-80 active:scale-95 transition-transform flex items-center justify-center w-touch-target-min h-touch-target-min rounded-full hover:bg-white/5">
-                    <span class="material-symbols-outlined text-[28px]">home</span>
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
                 </button>
                 <div class="flex flex-col items-center">
                     <h1 class="text-headline-md-mobile font-headline-md-mobile text-primary tracking-widest">COLOUR SORT</h1>
@@ -287,7 +308,7 @@
                     </div>
                 </div>
                 <button id="btn-undo" class="text-primary hover:opacity-80 active:scale-95 transition-transform flex items-center justify-center w-touch-target-min h-touch-target-min rounded-full hover:bg-white/5">
-                    <span class="material-symbols-outlined text-[28px]">undo</span>
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 10h10a8 8 0 018 8v2M3 10l6 6m-6-6l6-6"/></svg>
                 </button>
             </header>
 
@@ -312,18 +333,18 @@
             <!-- Navigation Controls (Mobile footer) -->
             <nav class="w-full z-50 flex justify-around items-center px-container-padding pb-8 pt-4 bg-surface-container-low/60 backdrop-blur-xl border-t border-white/5 shadow-2xl rounded-t-xl shrink-0">
                 <button id="btn-home-nav" class="flex flex-col items-center justify-center text-on-surface-variant p-3 hover:text-primary active:scale-90 transition-all duration-200">
-                    <span class="material-symbols-outlined text-[28px]">home</span>
+                    <svg class="w-7 h-7" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
                 </button>
                 <button id="btn-undo-nav" class="flex flex-col items-center justify-center text-on-surface-variant p-3 hover:text-primary active:scale-90 transition-all duration-200">
-                    <span class="material-symbols-outlined text-[28px]">undo</span>
+                    <svg class="w-7 h-7" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 10h10a8 8 0 018 8v2M3 10l6 6m-6-6l6-6"/></svg>
                 </button>
                 <!-- Active Hint Bulb button -->
                 <button id="btn-hint" class="flex flex-col items-center justify-center bg-secondary-container text-on-secondary-container rounded-full p-4 shadow-[0_0_20px_rgba(210,187,255,0.4)] hover:brightness-110 active:scale-90 transition-all duration-200">
-                    <span class="material-symbols-outlined text-[28px]" style="font-variation-settings: 'FILL' 1;">lightbulb</span>
+                    <svg class="w-7 h-7 animate-pulse" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/></svg>
                 </button>
                 <button id="btn-reset" class="flex flex-col items-center justify-center text-on-surface-variant p-3 hover:text-primary active:scale-90 transition-all duration-200">
                     <span id="reset-btn-text" class="hidden">Reset (3)</span>
-                    <span class="material-symbols-outlined text-[28px]">refresh</span>
+                    <svg class="w-7 h-7" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 4v5h.582m15.356 2a8 8 0 11-1.616-4.973M12 8v4l3 3"/></svg>
                 </button>
             </nav>
 
@@ -336,7 +357,7 @@
             <!-- Header -->
             <header class="flex items-center justify-between mb-8">
                 <button id="btn-settings-close" aria-label="Close Settings" class="w-[48px] h-[48px] flex items-center justify-center text-on-surface-variant hover:opacity-80 active:scale-95 transition-transform rounded-full hover:bg-white/5">
-                    <span class="material-symbols-outlined text-[28px]">close</span>
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
                 </button>
                 <h1 class="font-headline-md-mobile text-headline-md-mobile text-on-background tracking-widest uppercase">Settings</h1>
                 <div class="w-[48px] h-[48px]"></div> <!-- Spacer -->
@@ -349,7 +370,7 @@
                     <div class="surface_glass border_glass rounded-xl p-4 flex flex-col gap-4">
                         <div class="flex items-center justify-between h-[48px]">
                             <div class="flex items-center gap-4">
-                                <span class="material-symbols-outlined text-secondary" style="font-variation-settings: 'FILL' 1;">dark_mode</span>
+                                <svg class="w-6 h-6 text-secondary" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/></svg>
                                 <span class="font-body-lg text-body-lg text-on-surface">Theme Mode</span>
                             </div>
                             <div class="relative inline-block w-12 mr-2 align-middle select-none transition duration-200 ease-in">
@@ -365,7 +386,7 @@
                     <div class="surface_glass border_glass rounded-xl p-4 flex flex-col gap-4">
                         <div class="flex items-center justify-between h-[48px]">
                             <div class="flex items-center gap-4">
-                                <span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">volume_up</span>
+                                <svg class="w-6 h-6 text-primary" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z"/></svg>
                                 <span id="settings-sound-text" class="font-body-lg text-body-lg text-on-surface">Sound Effects</span>
                             </div>
                             <div class="relative inline-block w-12 mr-2 align-middle select-none transition duration-200 ease-in">
@@ -399,7 +420,7 @@
                         <p class="font-label-sm text-[10px] text-on-surface-variant tracking-wider uppercase mt-1">Select board difficulty or challenge</p>
                     </div>
                     <button id="btn-menu-close" class="text-primary hover:opacity-80 active:scale-95 transition-transform w-[40px] h-[40px] flex items-center justify-center rounded-full hover:bg-white/5">
-                        <span class="material-symbols-outlined text-[24px]">close</span>
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
                     </button>
                 </header>
 
@@ -444,28 +465,28 @@
                                     <div class="font-semibold text-on-surface">Par Challenge</div>
                                     <div class="text-xs text-on-surface-variant">Solve within a fixed maximum move count</div>
                                 </div>
-                                <span class="material-symbols-outlined text-secondary">arrow_forward_ios</span>
+                                <svg class="w-4 h-4 text-secondary" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>
                             </button>
                             <button class="challenge-select-btn w-full p-3 rounded-lg border border-white/10 hover:bg-white/5 hover:border-secondary/50 text-left transition-colors flex items-center justify-between" data-challenge="mystery">
                                 <div>
                                     <div class="font-semibold text-on-surface">Mystery Sort</div>
                                     <div class="text-xs text-on-surface-variant">Inner spheres remain hidden until uncovered</div>
                                 </div>
-                                <span class="material-symbols-outlined text-secondary">arrow_forward_ios</span>
+                                <svg class="w-4 h-4 text-secondary" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>
                             </button>
                             <button class="challenge-select-btn w-full p-3 rounded-lg border border-white/10 hover:bg-white/5 hover:border-secondary/50 text-left transition-colors flex items-center justify-between" data-challenge="squeeze">
                                 <div>
                                     <div class="font-semibold text-on-surface">Tight Squeeze</div>
                                     <div class="text-xs text-on-surface-variant">One buffer tube has a capacity limit of 3</div>
                                 </div>
-                                <span class="material-symbols-outlined text-secondary">arrow_forward_ios</span>
+                                <svg class="w-4 h-4 text-secondary" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>
                             </button>
                             <button class="challenge-select-btn w-full p-3 rounded-lg border border-white/10 hover:bg-white/5 hover:border-secondary/50 text-left transition-colors flex items-center justify-between" data-challenge="locked">
                                 <div>
                                     <div class="font-semibold text-on-surface">Locked Tubes</div>
                                     <div class="text-xs text-on-surface-variant">One buffer tube is locked until a tube completes</div>
                                 </div>
-                                <span class="material-symbols-outlined text-secondary">arrow_forward_ios</span>
+                                <svg class="w-4 h-4 text-secondary" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>
                             </button>
                         </div>
                     </div>
@@ -482,15 +503,15 @@
                 
                 <div class="w-full text-left space-y-2 mb-8">
                     <div class="flex items-center gap-2 text-sm text-on-surface">
-                        <span class="material-symbols-outlined text-primary text-base">check_circle</span>
+                        <svg class="w-5 h-5 text-primary shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
                         <span>Access difficulty levels with 6+ colors</span>
                     </div>
                     <div class="flex items-center gap-2 text-sm text-on-surface">
-                        <span class="material-symbols-outlined text-primary text-base">check_circle</span>
+                        <svg class="w-5 h-5 text-primary shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
                         <span>Unlock glassmorphism custom themes</span>
                     </div>
                     <div class="flex items-center gap-2 text-sm text-on-surface">
-                        <span class="material-symbols-outlined text-primary text-base">check_circle</span>
+                        <svg class="w-5 h-5 text-primary shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
                         <span>Infinite hints & deviation solving</span>
                     </div>
                 </div>
@@ -560,24 +581,23 @@
             <div class="glass-panel w-full max-w-md rounded-2xl p-8 flex flex-col items-center text-center border_glass relative z-10 shadow-2xl">
                 <!-- Icon/Graphic -->
                 <div class="w-20 h-20 mb-6 rounded-full bg-surface-container flex items-center justify-center border border-white/10 shadow-[0_0_30px_rgba(255,215,0,0.2)]">
-                    <span class="material-symbols-outlined text-4xl text-[#FFD700]" style="font-variation-settings: 'FILL' 1;">
-                        trophy
-                    </span>
+                    <svg class="w-10 h-10 text-[#FFD700]" fill="currentColor" viewBox="0 0 24 24"><path d="M19 5h-2V3H7v2H5c-1.1 0-2 .9-2 2v3c0 2.44 1.72 4.48 4 4.9V18c0 .55.45 1 1 1h2v2h4v-2h2c.55 0 1-.45 1-1v-3.1c2.28-.42 4-2.46 4-4.9V7c0-1.1-.9-2-2-2zM5 10V7h2v3H5zm14 0h-2V7h2v3z"/></svg>
                 </div>
                 <!-- Headline -->
                 <h1 class="font-display-lg text-display-lg text-[#FFD700] glow-text mb-1">YOU WIN!</h1>
                 <p id="win-message" class="font-body-lg text-body-lg text-on-surface-variant mb-8">Amazing! You sorted all colors perfectly.</p>
                 <!-- Action Buttons -->
                 <div class="flex flex-col w-full gap-3">
-                    <button id="btn-win-retry-same" class="w-full py-3.5 rounded-xl border border-white/20 text-on-surface font-headline-md-mobile text-headline-md-mobile hover:bg-surface-container-high transition-colors flex items-center justify-center gap-2">
-                        Replay Level
+                    <button id="btn-win-retry-same" class="w-full py-3.5 rounded-xl border border-white/20 text-on-surface font-headline-md-mobile text-headline-md-mobile hover:bg-surface-container-high transition-colors flex items-center justify-between px-6 gap-2">
+                        <span>Replay Level</span>
+                        <div class="w-4 h-4"></div>
                     </button>
                     <button id="btn-win-replay" class="w-full py-4 rounded-xl bg-tertiary text-on-tertiary-fixed neon-button font-headline-md-mobile text-headline-md-mobile flex items-center justify-center gap-2 font-bold text-black">
-                        <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">play_arrow</span>
+                        <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
                         Play Next Level
                     </button>
                     <button id="btn-win-menu" class="w-full py-3.5 rounded-xl border border-outline text-on-surface font-headline-md-mobile text-headline-md-mobile hover:bg-surface-container-high transition-colors flex items-center justify-center gap-2">
-                        <span class="material-symbols-outlined">menu</span>
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"/></svg>
                         Back to Menu
                     </button>
                 </div>
